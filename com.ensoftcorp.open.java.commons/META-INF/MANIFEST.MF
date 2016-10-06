@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Java Commons
+Bundle-SymbolicName: com.ensoftcorp.open.java.commons;singleton:=true
+Bundle-Version: 3.0.11.qualifier
+Bundle-Activator: com.ensoftcorp.open.java.commons.Activator
+Bundle-Vendor: EnSoft Corp.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
