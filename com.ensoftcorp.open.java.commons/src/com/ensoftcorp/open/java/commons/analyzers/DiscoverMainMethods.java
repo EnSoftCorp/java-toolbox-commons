@@ -78,7 +78,7 @@ public class DiscoverMainMethods extends Analyzer {
 	public Map<String, Result> getResults(Q context) {
 		HashMap<String,Result> results = new HashMap<String,Result>();
 		for(Node method : findMainMethods().intersection(context).eval().nodes()){
-			results.put(Analyzer.getUUID(), new Result((StandardQueries.getQualifiedMethodName(method)), Common.toQ(method)));
+			results.put(Analyzer.getUUID(), new Result((StandardQueries.getQualifiedFunctionName(method)), Common.toQ(method)));
 		}
 		return results;
 	}
