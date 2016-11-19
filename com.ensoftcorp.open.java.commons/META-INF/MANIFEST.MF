@@ -12,4 +12,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ensoftcorp.open.java.commons.analysis,
  com.ensoftcorp.open.java.commons.analyzers,
- com.ensoftcorp.open.java.commons.subsystems
+ com.ensoftcorp.open.java.commons.subsystems,
+ com.ensoftcorp.open.java.commons.wishful
