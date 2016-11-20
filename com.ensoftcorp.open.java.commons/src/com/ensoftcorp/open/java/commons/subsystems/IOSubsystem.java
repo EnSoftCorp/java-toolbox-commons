@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class IOSubsystem extends Subsystem {
+public class IOSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "IO_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class IOSubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "General input/output";
+		return "Java general input/output";
 	}
 
 	@Override

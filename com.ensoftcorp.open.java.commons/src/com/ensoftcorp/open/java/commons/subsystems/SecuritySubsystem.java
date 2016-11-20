@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class SecuritySubsystem extends Subsystem {
+public class SecuritySubsystem extends JavaSubsystem {
 
 	public static final String TAG = "SECURITY_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class SecuritySubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "Security libraries";
+		return "Java security libraries";
 	}
 
 	@Override

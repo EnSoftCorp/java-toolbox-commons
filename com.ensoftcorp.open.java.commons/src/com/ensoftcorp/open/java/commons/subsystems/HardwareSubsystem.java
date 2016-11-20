@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class HardwareSubsystem extends Subsystem {
+public class HardwareSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "HARDWARE_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class HardwareSubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "Hardware libraries";
+		return "Java hardware libraries";
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class IntrospectionSubsystem extends Subsystem {
+public class IntrospectionSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "INTROSPECTION_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class IntrospectionSubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "Reflection and runtime libraries";
+		return "Java reflection and runtime introspection libraries";
 	}
 
 	@Override

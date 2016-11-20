@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class UISubsystem extends Subsystem {
+public class UISubsystem extends JavaSubsystem {
 
 	public static final String TAG = "UI_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class UISubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "User interface libraries";
+		return "Java user interface libraries";
 	}
 
 	@Override

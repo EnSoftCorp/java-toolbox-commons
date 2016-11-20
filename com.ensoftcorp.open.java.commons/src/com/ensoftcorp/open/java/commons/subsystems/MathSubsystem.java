@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class MathSubsystem extends Subsystem {
+public class MathSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "MATH_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class MathSubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "Math libraries";
+		return "Java math libraries";
 	}
 
 	@Override

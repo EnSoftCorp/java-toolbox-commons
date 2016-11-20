@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class SerializationSubsystem extends Subsystem {
+public class SerializationSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "SERIALIZATION_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class SerializationSubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "Serialization libraries";
+		return "Java serialization libraries";
 	}
 
 	@Override

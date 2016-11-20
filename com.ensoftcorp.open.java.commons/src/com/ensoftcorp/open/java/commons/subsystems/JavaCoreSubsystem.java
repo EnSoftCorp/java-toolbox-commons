@@ -2,10 +2,10 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class JavaCoreSubsystem extends Subsystem {
+public class JavaCoreSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "JAVACORE_SUBSYSTEM";
-
+	
 	@Override
 	public String getName() {
 		return "Java Core";

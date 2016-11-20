@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class RMISubsystem extends Subsystem {
+public class RMISubsystem extends JavaSubsystem {
 
 	public static final String TAG = "RMI_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class RMISubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "Remote method invocation libraries";
+		return "Java remote method invocation libraries";
 	}
 
 	@Override

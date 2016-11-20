@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class DataStructureSubsystem extends Subsystem {
+public class DataStructureSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "DATA_STRUCTURE_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class DataStructureSubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "Common collection-like data structures";
+		return "Java common collection-like data structures";
 	}
 
 	@Override

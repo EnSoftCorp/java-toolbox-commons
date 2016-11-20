@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class DatabaseSubsystem extends Subsystem {
+public class DatabaseSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "DATABASE_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class DatabaseSubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "Database libraries";
+		return "Java database libraries";
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class CompressionSubsystem extends Subsystem {
+public class CompressionSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "COMPRESSION_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class CompressionSubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "Compression libraries";
+		return "Java compression libraries";
 	}
 
 	@Override

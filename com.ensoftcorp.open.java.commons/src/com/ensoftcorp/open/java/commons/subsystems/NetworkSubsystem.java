@@ -2,7 +2,7 @@ package com.ensoftcorp.open.java.commons.subsystems;
 
 import com.ensoftcorp.open.commons.subsystems.Subsystem;
 
-public class NetworkSubsystem extends Subsystem {
+public class NetworkSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "NETWORK_SUBSYSTEM";
 
@@ -13,7 +13,7 @@ public class NetworkSubsystem extends Subsystem {
 
 	@Override
 	public String getDescription() {
-		return "Network IO libraries";
+		return "Java network IO libraries";
 	}
 
 	@Override
