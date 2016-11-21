@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
 
+   <!-- add subsystem tagging instructions -->
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.CompressionSubsystem"></subsystem>
    </extension>
