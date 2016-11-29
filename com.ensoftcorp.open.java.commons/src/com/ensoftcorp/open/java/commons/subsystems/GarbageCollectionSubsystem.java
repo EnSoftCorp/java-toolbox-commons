@@ -1,7 +1,5 @@
 package com.ensoftcorp.open.java.commons.subsystems;
 
-import com.ensoftcorp.open.commons.subsystems.Subsystem;
-
 public class GarbageCollectionSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "GARBAGE_COLLECTION_SUBSYSTEM";

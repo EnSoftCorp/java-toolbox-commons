@@ -1,7 +1,5 @@
 package com.ensoftcorp.open.java.commons.subsystems;
 
-import com.ensoftcorp.open.commons.subsystems.Subsystem;
-
 public class SerializationSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "SERIALIZATION_SUBSYSTEM";

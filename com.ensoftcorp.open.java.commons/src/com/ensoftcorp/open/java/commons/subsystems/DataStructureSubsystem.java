@@ -1,7 +1,5 @@
 package com.ensoftcorp.open.java.commons.subsystems;
 
-import com.ensoftcorp.open.commons.subsystems.Subsystem;
-
 public class DataStructureSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "DATA_STRUCTURE_SUBSYSTEM";

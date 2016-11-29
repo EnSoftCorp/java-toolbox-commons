@@ -1,7 +1,5 @@
 package com.ensoftcorp.open.java.commons.subsystems;
 
-import com.ensoftcorp.open.commons.subsystems.Subsystem;
-
 public class ThreadingSubsystem extends JavaSubsystem {
 
 	public static final String TAG = "THREADING_SUBSYSTEM";
