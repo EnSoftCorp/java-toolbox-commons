@@ -10,7 +10,7 @@ import com.ensoftcorp.atlas.core.xcsg.XCSG;
  * 
  * @author Ben Holland
  */
-public class Primitives {
+public class PrimitiveAnalysis {
 
 	// boxed primitive types
 	private static final Node BOOLEAN_OBJECT = Common.typeSelect("java.lang","Boolean").eval().nodes().one();

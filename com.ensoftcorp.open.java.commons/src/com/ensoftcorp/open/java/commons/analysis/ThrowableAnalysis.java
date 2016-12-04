@@ -14,8 +14,71 @@ import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.CommonQueries;
 import com.ensoftcorp.atlas.core.script.CommonQueries.TraversalDirection;
+import com.ensoftcorp.atlas.core.xcsg.XCSG;
 
 public class ThrowableAnalysis {
+	
+	/**
+	 * Returns all Throwable types
+	 * Throwable types are checked, except for subclasses of Error and RuntimeException types
+	 * 
+	 * @return
+	 */
+	public static Q getThrowables() {
+		Q supertypes = Common.universe().edgesTaggedWithAny(XCSG.Supertype);
+		return supertypes.reverse(Common.typeSelect("java.lang", "Throwable"));
+	}
+
+	/**
+	 * Returns all checked Throwable types
+	 * @return
+	 */
+	public static Q getCheckedThrowables() {
+		return getThrowables().difference(getErrors(), getUncheckedExceptions());
+	}
+	
+	/**
+	 * Returns all unchecked Throwable types
+	 * @return
+	 */
+	public static Q getUncheckedThrowables() {
+		return getThrowables().difference(getCheckedExceptions());
+	}
+	
+	/**
+	 * Returns all Error types
+	 * Errors are unchecked Throwable types that subclass Error
+	 * 
+	 * @return
+	 */
+	public static Q getErrors() {
+		Q supertypes = Common.universe().edgesTaggedWithAny(XCSG.Supertype);
+		return supertypes.reverse(Common.typeSelect("java.lang", "Error"));
+	}
+
+	/**
+	 * Returns all checked exceptions
+	 * Checked exceptions extend the Exception type, but do not extend the RuntimeException type
+	 * 
+	 * @return
+	 */
+	public static Q getCheckedExceptions() {
+		Q supertypes = Common.universe().edgesTaggedWithAny(XCSG.Supertype);
+		Q exceptions = supertypes.reverse(Common.typeSelect("java.lang", "Exception"));
+		Q uncheckedExceptions = supertypes.reverse(Common.typeSelect("java.lang", "RuntimeException"));
+		return exceptions.difference(uncheckedExceptions);
+	}
+
+	/**
+	 * Returns all unchecked Exceptions
+	 * Unchecked exceptions extend the RuntimeException type
+	 * 
+	 * @return
+	 */
+	public static Q getUncheckedExceptions() {
+		Q supertypes = Common.universe().edgesTaggedWithAny(XCSG.Supertype);
+		return supertypes.reverse(Common.typeSelect("java.lang", "RuntimeException"));
+	}
 	
 	/**
 	 * Builds a "stack graph". A stack graph combines CALL (per cf), CONTROL_FLOW,
