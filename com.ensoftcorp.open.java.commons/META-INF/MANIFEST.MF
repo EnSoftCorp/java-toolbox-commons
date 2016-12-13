@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Java Commons
+Bundle-Name: Java Toolbox Commons
 Bundle-SymbolicName: com.ensoftcorp.open.java.commons;singleton:=true
 Bundle-Version: 3.0.13.qualifier
 Bundle-Activator: com.ensoftcorp.open.java.commons.Activator

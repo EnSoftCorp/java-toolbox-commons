@@ -9,7 +9,7 @@
       A set of common utilities for Java program analysis using Atlas.
    </description>
 
-   <copyright url="https://ensoftcorp.github.io/toolbox-commons">
+   <copyright url="https://ensoftcorp.github.io/java-toolbox-commons">
       Copyright 2016 EnSoft Corp.
    </copyright>
 
@@ -39,7 +39,6 @@ SOFTWARE.
 
    <url>
       <update label="ensoftcorp.github.io" url="https://ensoftcorp.github.io/java-toolbox-commons/updates/"/>
-      <discovery label="Toolbox Commons" url="https://ensoftcorp.github.io/toolbox-commons/updates/"/>
       <discovery label="Atlas" url="http://download.ensoftcorp.com/atlas/eclipse"/>
    </url>
 
