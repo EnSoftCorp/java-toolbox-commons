@@ -32,75 +32,57 @@
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.CompressionSubsystem"></subsystem>
    </extension>
-
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.CryptoSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.DatabaseSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.DataStructureSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.GarbageCollectionSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.HardwareSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.IntrospectionSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.IOSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.JavaCoreSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.LogSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.MathSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.NetworkSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.RandomSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.RMISubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.SecuritySubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.SerializationSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.TestingSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.ThreadingSubsystem"></subsystem>
    </extension>
-   
    <extension point="com.ensoftcorp.open.commons.subsystem">
       <subsystem class="com.ensoftcorp.open.java.commons.subsystems.UISubsystem"></subsystem>
    </extension>
