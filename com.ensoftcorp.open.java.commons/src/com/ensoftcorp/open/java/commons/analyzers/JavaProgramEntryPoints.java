@@ -11,11 +11,11 @@ import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analysis.StandardQueries;
 import com.ensoftcorp.open.commons.analyzers.Analyzer;
 
-public class DiscoverMainMethods extends Analyzer {
+public class JavaProgramEntryPoints extends Analyzer {
 	
 	@Override
 	public String getName(){
-		return "Discover Main Methods";
+		return "Java Program Entry Points";
 	}
 	
 	@Override

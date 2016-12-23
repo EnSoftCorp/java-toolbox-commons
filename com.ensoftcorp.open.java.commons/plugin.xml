@@ -30,7 +30,19 @@
 
    <!-- add analyzer defintions -->
    <extension point="com.ensoftcorp.open.commons.analyzer">
-      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.DiscoverMainMethods"></analyzer>
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.JavaProgramEntryPoints"></analyzer>
+   </extension>
+   <extension point="com.ensoftcorp.open.commons.analyzer">
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ClassLoaderUsage"></analyzer>
+   </extension>
+   <extension point="com.ensoftcorp.open.commons.analyzer">
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.NativeCodeUsage"></analyzer>
+   </extension>
+   <extension point="com.ensoftcorp.open.commons.analyzer">
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ProcessUsage"></analyzer>
+   </extension>
+   <extension point="com.ensoftcorp.open.commons.analyzer">
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ReflectionUsage"></analyzer>
    </extension>
 
    <!-- add subsystem tagging instructions -->
