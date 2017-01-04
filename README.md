@@ -1,2 +1,2 @@
-# java-toolbox-commons
-A collection of analysis utilities for analyzing Java source programs
+# Java Toolbox Commons
+A set of common utilities for Java program analysis using Atlas. For more details visit: [https://ensoftcorp.github.io/java-toolbox-commons](https://ensoftcorp.github.io/java-toolbox-commons).
