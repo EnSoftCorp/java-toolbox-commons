@@ -37,11 +37,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
    </license>
 
-   <url>
-      <update label="ensoftcorp.github.io" url="https://ensoftcorp.github.io/java-toolbox-commons/updates/"/>
-      <discovery label="Atlas" url="http://download.ensoftcorp.com/atlas/eclipse"/>
-   </url>
-
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
