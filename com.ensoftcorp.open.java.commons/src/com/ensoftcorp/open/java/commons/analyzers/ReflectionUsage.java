@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.java.core.script.Common;
 import com.ensoftcorp.atlas.java.core.script.CommonQueries;
@@ -34,7 +35,9 @@ public class ReflectionUsage extends Analyzer {
 		Q containsEdges = Common.universe().edgesTaggedWithAny(XCSG.Contains).retainEdges();
 		Q reflectionPackage = Common.universe().pkg("java.lang.reflect");
 		Q reflectionMethods = containsEdges.forward(reflectionPackage).nodesTaggedWithAny(XCSG.Method);
-		reflectionMethods = reflectionMethods.difference(SetDefinitions.objectMethodOverrides(), Common.methods("getName"), Common.methods("getSimpleName"));
+		Q objectMethodOverrides = Common.edges(XCSG.Overrides).reverse(
+				CommonQueries.declarations(Common.typeSelect("java.lang", "Object"), TraversalDirection.FORWARD).nodesTaggedWithAny(XCSG.Method));
+		reflectionMethods = reflectionMethods.difference(objectMethodOverrides, Common.methods("getName"), Common.methods("getSimpleName"));
 		
 		HashMap<String,Result> results = new HashMap<String,Result>();
 		for(Node reflectionMethod : reflectionMethods.eval().nodes()){
