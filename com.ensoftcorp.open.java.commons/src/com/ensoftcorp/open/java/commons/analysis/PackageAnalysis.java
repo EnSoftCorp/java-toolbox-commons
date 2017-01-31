@@ -8,9 +8,10 @@ import com.ensoftcorp.atlas.core.xcsg.XCSG;
 
 public class PackageAnalysis {
 	
-	// prevent access to constructors
-	private PackageAnalysis() {}
-	
+	private PackageAnalysis() {
+		// use to prevent object construction
+	}
+
 	/**
 	 * Returns a Q containing package nodes including the given package 
 	 * and its subpackages

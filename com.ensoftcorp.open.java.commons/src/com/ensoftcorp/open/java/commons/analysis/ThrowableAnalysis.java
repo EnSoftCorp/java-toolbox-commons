@@ -18,6 +18,10 @@ import com.ensoftcorp.atlas.core.xcsg.XCSG;
 
 public class ThrowableAnalysis {
 	
+	private ThrowableAnalysis(){
+		// use to prevent object construction
+	}
+	
 	/**
 	 * Returns all Throwable types
 	 * Throwable types are checked, except for subclasses of Error and RuntimeException types
