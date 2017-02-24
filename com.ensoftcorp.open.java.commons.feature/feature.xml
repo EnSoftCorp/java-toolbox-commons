@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.ensoftcorp.open.java.commons.feature.group"
+      id="com.ensoftcorp.open.java.commons.feature"
       label="Java Toolbox Commons"
-      version="3.0.14.qualifier"
+      version="3.0.15.qualifier"
       provider-name="EnSoft Corp.">
 
    <description url="https://ensoftcorp.github.io/java-toolbox-commons">
@@ -38,9 +38,9 @@ SOFTWARE.
    </license>
 
    <requires>
-      <import plugin="com.ensoftcorp.atlas.java.core" version="3.0.14" match="greaterOrEqual"/>
-      <import plugin="com.ensoftcorp.atlas.java.ui" version="3.0.14" match="greaterOrEqual"/>
-      <import feature="com.ensoftcorp.open.commons.feature.group" version="3.0.14.qualifier"/>
+      <import plugin="com.ensoftcorp.atlas.java.core" version="3.0.15" match="greaterOrEqual"/>
+      <import plugin="com.ensoftcorp.atlas.java.ui" version="3.0.15" match="greaterOrEqual"/>
+      <import feature="com.ensoftcorp.open.commons.feature" version="3.0.15.qualifier"/>
    </requires>
 
    <plugin
