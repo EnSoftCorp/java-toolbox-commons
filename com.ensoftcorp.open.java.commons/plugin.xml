@@ -11,14 +11,14 @@
 	   </handler>
 	</extension>
 
-	<!-- extend the Atlas Toolbox menu with a new submenu for purity analysis -->
+	<!-- extend the Atlas Toolbox menu with a new submenu -->
 	<extension
 	      point="org.eclipse.ui.menus">
 	   <menuContribution
 	         locationURI="menu:com.ensoftcorp.open.commons.menus.toolbox?after=additions">
 	      <menu
 	            label="Java Toolbox Commons"
-	            id="com.ensoftcorp.open.java.commons.menus.androidEssentialsMenu">
+	            id="com.ensoftcorp.open.java.commons.menu">
 	         <command
 	               label="Show Java Subsystem Tag Hierarchy"
 	               commandId="com.ensoftcorp.open.java.commons.menus.showJavaSubsystemTagHierarchyCommand"
