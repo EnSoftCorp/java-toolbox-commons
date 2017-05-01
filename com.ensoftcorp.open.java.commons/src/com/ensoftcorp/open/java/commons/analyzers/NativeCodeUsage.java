@@ -8,9 +8,10 @@ import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.java.core.script.Common;
 import com.ensoftcorp.atlas.java.core.script.CommonQueries;
-import com.ensoftcorp.open.commons.analyzers.Analyzer;
+import com.ensoftcorp.open.commons.analyzers.Analyzer.Result;
+import com.ensoftcorp.open.commons.analyzers.Property;
 
-public class NativeCodeUsage extends Analyzer {
+public class NativeCodeUsage extends Property {
 
 	@Override
 	public String getName(){
