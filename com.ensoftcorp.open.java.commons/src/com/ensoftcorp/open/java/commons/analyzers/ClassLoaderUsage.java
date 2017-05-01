@@ -1,7 +1,7 @@
 package com.ensoftcorp.open.java.commons.analyzers;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
@@ -29,7 +29,7 @@ public class ClassLoaderUsage extends Analyzer {
 	}
 	
 	@Override
-	public Map<String, Result> getResults(Q context) {
+	public List<Result> getResults(Q context) {
 		// get all the java.lang.reflect methods
 		Q containsEdges = Common.universe().edgesTaggedWithAny(XCSG.Contains).retainEdges();
 		Q supertypeEdges = Common.universe().edgesTaggedWithAny(XCSG.Supertype).retainEdges();
@@ -37,11 +37,11 @@ public class ClassLoaderUsage extends Analyzer {
 		Q objectMethodOverrides = Common.edges(XCSG.Overrides).reverse(
 				CommonQueries.declarations(Common.typeSelect("java.lang", "Object"), TraversalDirection.FORWARD).nodesTaggedWithAny(XCSG.Method));
 		Q loaderMethods = containsEdges.forwardStep(loaders).nodesTaggedWithAny(XCSG.Method).difference(objectMethodOverrides);
-		HashMap<String,Result> results = new HashMap<String,Result>();
+		List<Result> results = new LinkedList<Result>();
 		for(Node loaderMethod : loaderMethods.eval().nodes()){
 			Q interaction = CommonQueries.interactions(context, Common.toQ(loaderMethod), XCSG.Call);
 			if(!interaction.eval().edges().isEmpty()){
-				results.put(Analyzer.getUUID(), new Result("Class Loader Usage", interaction));
+				results.add(new Result("Class Loader Usage", interaction));
 			}
 		}
 		return results;

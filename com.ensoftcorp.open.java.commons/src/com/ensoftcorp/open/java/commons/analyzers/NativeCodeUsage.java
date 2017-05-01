@@ -1,7 +1,7 @@
 package com.ensoftcorp.open.java.commons.analyzers;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
@@ -28,13 +28,13 @@ public class NativeCodeUsage extends Analyzer {
 	}
 
 	@Override
-	public Map<String, Result> getResults(Q context) {
+	public List<Result> getResults(Q context) {
 		Q nativeMethods = context.nodesTaggedWithAny(XCSG.Java.nativeMethod);
-		HashMap<String,Result> results = new HashMap<String,Result>();
+		List<Result> results = new LinkedList<Result>();
 		for(Node nativeMethod : nativeMethods.eval().nodes()){
 			Q interaction = CommonQueries.interactions(context, Common.toQ(nativeMethod), XCSG.Call);
 			if(!interaction.eval().edges().isEmpty()){
-				results.put(Analyzer.getUUID(), new Result("Native Method Usage", interaction));
+				results.add(new Result("Native Method Usage", interaction));
 			}
 		}
 		return results;

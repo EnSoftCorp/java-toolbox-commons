@@ -1,7 +1,7 @@
 package com.ensoftcorp.open.java.commons.analyzers;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
@@ -75,10 +75,10 @@ public class JavaProgramEntryPoints extends Analyzer {
 	}
 
 	@Override
-	public Map<String, Result> getResults(Q context) {
-		HashMap<String,Result> results = new HashMap<String,Result>();
+	public List<Result> getResults(Q context) {
+		List<Result> results = new LinkedList<Result>();
 		for(Node method : findMainMethods().intersection(context).eval().nodes()){
-			results.put(Analyzer.getUUID(), new Result((StandardQueries.getQualifiedFunctionName(method)), Common.toQ(method)));
+			results.add(new Result((StandardQueries.getQualifiedFunctionName(method)), Common.toQ(method)));
 		}
 		return results;
 	}

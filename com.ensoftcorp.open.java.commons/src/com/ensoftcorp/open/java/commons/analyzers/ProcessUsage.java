@@ -1,7 +1,7 @@
 package com.ensoftcorp.open.java.commons.analyzers;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
@@ -28,16 +28,16 @@ public class ProcessUsage extends Analyzer {
 	}
 
 	@Override
-	public Map<String, Result> getResults(Q context) {
+	public List<Result> getResults(Q context) {
 		Q runtimeType = Common.typeSelect("java.lang", "Runtime");
 		Q declaresEdges = Common.universe().edgesTaggedWithAny(XCSG.Contains).retainEdges();
 		Q runtimeMethods = declaresEdges.forwardStep(runtimeType).nodesTaggedWithAny(XCSG.Method);
 		Q execMethods = runtimeMethods.intersection(Common.methods("exec"));
-		HashMap<String,Result> results = new HashMap<String,Result>();
+		List<Result> results = new LinkedList<Result>();
 		for(Node execMethod : execMethods.eval().nodes()){
 			Q interaction = CommonQueries.interactions(context, Common.toQ(execMethod), XCSG.Call);
 			if(!interaction.eval().edges().isEmpty()){
-				results.put(Analyzer.getUUID(), new Result("Process Usage", interaction));
+				results.add(new Result("Process Usage", interaction));
 			}
 		}
 		return results;

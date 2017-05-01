@@ -1,7 +1,7 @@
 package com.ensoftcorp.open.java.commons.analyzers;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
@@ -29,7 +29,7 @@ public class ReflectionUsage extends Analyzer {
 	}
 
 	@Override
-	public Map<String, Result> getResults(Q context) {
+	public List<Result> getResults(Q context) {
 		// get all the java.lang.reflect methods
 		Q containsEdges = Common.universe().edgesTaggedWithAny(XCSG.Contains).retainEdges();
 		Q reflectionPackage = Common.universe().pkg("java.lang.reflect");
@@ -38,11 +38,11 @@ public class ReflectionUsage extends Analyzer {
 				CommonQueries.declarations(Common.typeSelect("java.lang", "Object"), TraversalDirection.FORWARD).nodesTaggedWithAny(XCSG.Method));
 		reflectionMethods = reflectionMethods.difference(objectMethodOverrides, Common.methods("getName"), Common.methods("getSimpleName"));
 		
-		HashMap<String,Result> results = new HashMap<String,Result>();
+		List<Result> results = new LinkedList<Result>();
 		for(Node reflectionMethod : reflectionMethods.eval().nodes()){
 			Q interaction = CommonQueries.interactions(context, Common.toQ(reflectionMethod), XCSG.Call);
 			if(!interaction.eval().edges().isEmpty()){
-				results.put(Analyzer.getUUID(), new Result("Reflection Usage", interaction));
+				results.add(new Result("Reflection Usage", interaction));
 			}
 		}
 		
