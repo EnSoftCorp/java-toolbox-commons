@@ -9,7 +9,6 @@ import com.ensoftcorp.atlas.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.java.core.script.Common;
 import com.ensoftcorp.atlas.java.core.script.CommonQueries;
-import com.ensoftcorp.open.commons.analyzers.Analyzer.Result;
 import com.ensoftcorp.open.commons.analyzers.Property;
 
 public class ClassLoaderUsage extends Property {

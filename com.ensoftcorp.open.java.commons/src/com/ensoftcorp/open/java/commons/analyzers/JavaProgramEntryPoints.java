@@ -9,7 +9,6 @@ import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.CommonQueries;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analysis.StandardQueries;
-import com.ensoftcorp.open.commons.analyzers.Analyzer.Result;
 import com.ensoftcorp.open.commons.analyzers.Property;
 
 public class JavaProgramEntryPoints extends Property {
