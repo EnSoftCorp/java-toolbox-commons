@@ -44,6 +44,9 @@
    <extension point="com.ensoftcorp.open.commons.analyzer">
       <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ReflectionUsage"></analyzer>
    </extension>
+   <extension point="com.ensoftcorp.open.commons.analyzer">
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.SerializationUsage"></analyzer>
+   </extension>
 
    <!-- add subsystem tagging instructions -->
    <extension point="com.ensoftcorp.open.commons.subsystem">

@@ -30,8 +30,7 @@ public class ProcessUsage extends Property {
 	@Override
 	public List<Result> getResults(Q context) {
 		Q runtimeType = Common.typeSelect("java.lang", "Runtime");
-		Q declaresEdges = Common.universe().edgesTaggedWithAny(XCSG.Contains).retainEdges();
-		Q runtimeMethods = declaresEdges.forwardStep(runtimeType).nodesTaggedWithAny(XCSG.Method);
+		Q runtimeMethods = runtimeType.children().nodesTaggedWithAny(XCSG.Method);
 		Q execMethods = runtimeMethods.intersection(Common.methods("exec"));
 		List<Result> results = new LinkedList<Result>();
 		for(Node execMethod : execMethods.eval().nodes()){

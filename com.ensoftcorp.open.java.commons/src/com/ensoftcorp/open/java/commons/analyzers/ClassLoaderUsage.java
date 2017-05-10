@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
-import com.ensoftcorp.atlas.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.java.core.script.Common;
 import com.ensoftcorp.atlas.java.core.script.CommonQueries;
@@ -30,13 +29,11 @@ public class ClassLoaderUsage extends Property {
 	
 	@Override
 	public List<Result> getResults(Q context) {
-		// get all the java.lang.reflect methods
-		Q containsEdges = Common.universe().edgesTaggedWithAny(XCSG.Contains).retainEdges();
-		Q supertypeEdges = Common.universe().edgesTaggedWithAny(XCSG.Supertype).retainEdges();
+		Q supertypeEdges = Common.universe().edges(XCSG.Supertype);
+		Q overridesEdges = Common.universe().edges(XCSG.Overrides);
 		Q loaders = supertypeEdges.reverse(Common.typeSelect("java.lang", "ClassLoader"));
-		Q objectMethodOverrides = Common.edges(XCSG.Overrides).reverse(
-				CommonQueries.declarations(Common.typeSelect("java.lang", "Object"), TraversalDirection.FORWARD).nodesTaggedWithAny(XCSG.Method));
-		Q loaderMethods = containsEdges.forwardStep(loaders).nodesTaggedWithAny(XCSG.Method).difference(objectMethodOverrides);
+		Q objectMethodOverrides = overridesEdges.reverse(Common.typeSelect("java.lang", "Object").contained().nodes(XCSG.Method));
+		Q loaderMethods = loaders.children().nodes(XCSG.Method).difference(objectMethodOverrides);
 		List<Result> results = new LinkedList<Result>();
 		for(Node loaderMethod : loaderMethods.eval().nodes()){
 			Q interaction = CommonQueries.interactions(context, Common.toQ(loaderMethod), XCSG.Call);
