@@ -28,4 +28,9 @@ public class MathSubsystem extends JavaSubsystem {
 	public String[] getNamespaces() {
 		return new String[] { "java.math" };
 	}
+	
+	@Override
+	public String[] getTypes() {
+		return new String[] { "java.lang.Math" };
+	}
 }

@@ -26,7 +26,16 @@ public class RandomSubsystem extends JavaSubsystem {
 
 	@Override
 	public String[] getNamespaces() {
-		// TODO: implement
 		return new String[] {};
+	}
+	
+	@Override
+	public String[] getTypes() {
+		return new String[] { "java.util.Random", "java.security.SecureRandom" };
+	}
+	
+	@Override
+	public String[] getMethods() {
+		return new String[] { "java.lang.Math random" };
 	}
 }
