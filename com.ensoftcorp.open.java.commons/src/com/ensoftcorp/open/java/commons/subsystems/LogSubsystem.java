@@ -28,12 +28,14 @@ public class LogSubsystem extends JavaSubsystem {
 	public String[] getNamespaces() {
 		return new String[] { 
 			"java.util.logging", // standard JDK logging apis
+			
 			"org.apache.logging.log4j", // Public API for Log4j 2
 			"org.apache.logging.log4j.message", // Public Message Types used for Log4j 2
 			"org.apache.logging.log4j.simple", // Simple logging implementation
 			"org.apache.logging.log4j.spi", // Internal interfaces and classes to be used by authors of logging implementations or for internal use by API classes
 			"org.apache.logging.log4j.status", // Status API for Log4j 2
 			"org.apache.logging.log4j.util", // Internal utility classes for the Log4j 2 API
+			
 			"org.apache.log4j", // The main log4j package.
 			"org.apache.log4j.chainsaw", // Chainsaw is a GUI log viewer and filter for the log4j package.
 			"org.apache.log4j.config", // Package used in getting/setting component properties.
