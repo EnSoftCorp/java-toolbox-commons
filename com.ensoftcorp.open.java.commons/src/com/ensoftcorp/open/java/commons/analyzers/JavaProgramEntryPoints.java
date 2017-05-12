@@ -6,10 +6,9 @@ import java.util.List;
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
-import com.ensoftcorp.atlas.core.script.CommonQueries;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
-import com.ensoftcorp.open.commons.analysis.StandardQueries;
 import com.ensoftcorp.open.commons.analyzers.Property;
+import com.ensoftcorp.open.java.commons.analysis.CommonQueries;
 
 public class JavaProgramEntryPoints extends Property {
 	
@@ -78,7 +77,7 @@ public class JavaProgramEntryPoints extends Property {
 	public List<Result> getResults(Q context) {
 		List<Result> results = new LinkedList<Result>();
 		for(Node method : findMainMethods().intersection(context).eval().nodes()){
-			results.add(new Result((StandardQueries.getQualifiedFunctionName(method)), Common.toQ(method)));
+			results.add(new Result((CommonQueries.getQualifiedMethodName(method)), Common.toQ(method)));
 		}
 		return results;
 	}

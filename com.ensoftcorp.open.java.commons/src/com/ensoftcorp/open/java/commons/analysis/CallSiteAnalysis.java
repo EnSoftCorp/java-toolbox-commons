@@ -17,9 +17,7 @@ import com.ensoftcorp.atlas.core.db.set.EmptyAtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
-import com.ensoftcorp.atlas.java.core.script.CommonQueries;
 import com.ensoftcorp.open.commons.analysis.G;
-import com.ensoftcorp.open.commons.analysis.StandardQueries;
 import com.ensoftcorp.open.java.commons.log.Log;
 
 
@@ -89,7 +87,7 @@ public class CallSiteAnalysis {
 			AtlasSet<GraphElement> targetMethods = new AtlasHashSet<GraphElement>();
 			AtlasSet<Node> targetIdentities = getIdentity(dataFlowGraph, callsite).eval().nodes();
 			for (Node targetIdentity : targetIdentities) {
-				Node targetMethod = StandardQueries.getContainingFunction(targetIdentity);
+				Node targetMethod = CommonQueries.getContainingMethod(targetIdentity);
 				if (targetMethod != null){
 					targetMethods.add(targetMethod);
 				} else {
