@@ -1,6 +1,8 @@
 package com.ensoftcorp.open.java.commons.analysis;
 
+import com.ensoftcorp.atlas.core.db.graph.Edge;
 import com.ensoftcorp.atlas.core.db.graph.Graph;
+import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
@@ -712,6 +714,45 @@ public final class CommonQueries {
 	}
 	
 	// begin toolbox commons queries
+	
+	/**
+	 * Selects the Atlas graph element given a serialized graph
+	 * element address
+	 * 
+	 * Returns null if the address does not correspond to a graph element
+	 * 
+	 * @param address
+	 * @return
+	 */
+	public static GraphElement getGraphElementByAddress(String address){
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.getGraphElementByAddress(address);
+	}
+	
+	/**
+	 * Selects the Atlas node graph element given a serialized graph
+	 * element address
+	 * 
+	 * Returns null if the address does not correspond to a node
+	 * 
+	 * @param address
+	 * @return
+	 */
+	public static Node getNodeByAddress(String address){
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.getNodeByAddress(address);
+	}
+	
+	/**
+	 * Selects the Atlas edge graph element given a serialized graph
+	 * element address
+	 * 
+	 * Returns null if the address does not correspond to a edge
+	 * 
+	 * @param address
+	 * @return
+	 */
+	public static Edge getEdgeByAddress(String address){
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.getEdgeByAddress(address);
+	}
 	
 	/**
 	 * Everything declared under the given methods, but NOT declared under
