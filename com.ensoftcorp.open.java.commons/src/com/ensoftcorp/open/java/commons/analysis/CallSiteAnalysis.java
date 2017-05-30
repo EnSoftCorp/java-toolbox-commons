@@ -9,13 +9,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 
 import com.ensoftcorp.atlas.core.db.graph.Graph;
-import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.db.set.EmptyAtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.query.Query;
+import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analysis.G;
 import com.ensoftcorp.open.java.commons.log.Log;
@@ -30,7 +30,7 @@ public class CallSiteAnalysis {
 	/**
 	 * Given a {@link XCSG#CallSite}, return formal {@link XCSG#Identity} arguments for possible target methods.  
 	 **/
-	public static Q resolveToFormalIdentity(GraphElement callsite) { 
+	public static Q resolveToFormalIdentity(Node callsite) { 
 		return resolveToFormalIdentity(toQ(callsite));
 	}
 	
@@ -48,7 +48,7 @@ public class CallSiteAnalysis {
 	 * @param callsite
 	 * @return
 	 */
-	public static Q getSignature(GraphElement callsite) {
+	public static Q getSignature(Node callsite) {
 		return getSignature(toQ(callsite));
 	}
 	
@@ -57,6 +57,18 @@ public class CallSiteAnalysis {
 		return signature;
 	}
 	
+	/**
+	 * Returns the set of target methods that the given callsites could resolve to
+	 * @param callsites
+	 * @return
+	 */
+	public static Q getTargetMethods(Q callsites){
+		AtlasSet<Node> targets = new AtlasHashSet<Node>();
+		for(Node callsite : callsites.eval().nodes()){
+			targets.addAll(getTargetMethods(callsite).eval().nodes());
+		}
+		return Common.toQ(targets);
+	}
 	
 	/**
 	 * Given a StaticDispatchCallSite or a DynamicDispatchCallSite, return the methods which may
@@ -65,7 +77,7 @@ public class CallSiteAnalysis {
 	 * @param callsite
 	 * @return
 	 */
-	public static Q getTargetMethods(GraphElement callsite) {
+	public static Q getTargetMethods(Node callsite) {
 		
 		// Note: nodes and edges currently need not be bounded (i.e. any ModelElement is acceptable)
 		// The following are used if present: 
@@ -77,14 +89,14 @@ public class CallSiteAnalysis {
 		return getTargetMethods(new NullProgressMonitor(), dataFlowGraph, callsite);
 	}
 	
-	private static Q getTargetMethods(IProgressMonitor monitor, Graph dataFlowGraph, GraphElement callsite) {
+	private static Q getTargetMethods(IProgressMonitor monitor, Graph dataFlowGraph, Node callsite) {
 		if (callsite.taggedWith(XCSG.StaticDispatchCallSite)) {
 			return toQ(dataFlowGraph).edgesTaggedWithAny(XCSG.InvokedFunction)
 				.successors(toQ(toGraph(callsite)));
 			
 		} else if (callsite.taggedWith(XCSG.DynamicDispatchCallSite)) {
 			
-			AtlasSet<GraphElement> targetMethods = new AtlasHashSet<GraphElement>();
+			AtlasSet<Node> targetMethods = new AtlasHashSet<Node>();
 			AtlasSet<Node> targetIdentities = getIdentity(dataFlowGraph, callsite).eval().nodes();
 			for (Node targetIdentity : targetIdentities) {
 				Node targetMethod = CommonQueries.getContainingMethod(targetIdentity);
@@ -105,7 +117,7 @@ public class CallSiteAnalysis {
 	/**
 	 * Given a call site, return formal identity arguments for possible target methods.  
 	 **/
-	private static Q getIdentity(Graph dataFlowGraph, GraphElement callsite) {
+	private static Q getIdentity(Graph dataFlowGraph, Node callsite) {
 		return getIdentity(toQ(dataFlowGraph), toQ(callsite));
 	}
 	
