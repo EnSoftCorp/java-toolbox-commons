@@ -24,7 +24,7 @@ public class LiteralPassedParameterCallsiteFilter extends NodeFilter {
 
 	public LiteralPassedParameterCallsiteFilter() {
 		this.addPossibleFlag(EXCLUDE_MATCHES, "Retain only callsites whose selected passed parameters are not literals.");
-		this.addPossibleParameter(PARAMETER_INDEXES, String.class, false, "A comma seperated list of integers denoting the parameter indexes to consider. By default all parameters are considered.");
+		this.addPossibleParameter(PARAMETER_INDEXES, String.class, false, "A comma seperated list of integers denoting the parameter indexes to consider. Index values begin at 0. By default all parameters are considered.");
 	}
 	
 	@Override
@@ -54,7 +54,8 @@ public class LiteralPassedParameterCallsiteFilter extends NodeFilter {
 			}
 			Q parameterPassValues = dataFlowEdges.predecessors(parametersPass);
 			// if all passed parameter values are literals, add to results
-			if(parameterPassValues.eval().nodes().size() == parameterPassValues.nodes(XCSG.Literal).eval().nodes().size()){
+			long parameterPassValuesSize = parameterPassValues.eval().nodes().size();
+			if(parameterPassValuesSize > 0 && parameterPassValuesSize == parameterPassValues.nodes(XCSG.Literal).eval().nodes().size()){
 				literalOnlyCallsites.add(callsite);
 			}
 		}
