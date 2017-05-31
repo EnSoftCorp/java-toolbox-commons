@@ -2,6 +2,25 @@
 <?eclipse version="3.4"?>
 <plugin>
 
+   <!-- create an initializer extension to initialize preferences -->
+   <extension
+      point="org.eclipse.equinox.preferences.preferences">
+	   <initializer
+	         class="com.ensoftcorp.open.java.commons.preferences.JavaCommonsPreferences">
+	   </initializer>
+	</extension>
+
+   <!-- add java toolbox commons preference page (under the toolbox commons preferences) -->
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.ensoftcorp.open.java.commons.ui.JavaCommonsPreferencesPage"
+            id="com.ensoftcorp.open.java.commons.ui.preferences"
+            name="Java Toolbox Commons"
+            category="com.ensoftcorp.open.commons.ui.preferences">
+      </page>
+   </extension>
+
 	<!-- define command some handler extensions -->
 	<extension
 	      point="org.eclipse.ui.handlers">
@@ -27,6 +46,12 @@
 	      </menu>
 	   </menuContribution>
 	</extension>
+	
+   <!-- adds prioritized codemap stage -->
+   <extension point="com.ensoftcorp.open.commons.codemap">
+      <codemap class="com.ensoftcorp.open.java.commons.refinement.SystemExitControlFlowRefinement"></codemap>
+      <codemap class="com.ensoftcorp.open.java.commons.refinement.ThreadRunnableCallSummarization"></codemap>
+   </extension>
 
    <!-- add analyzer defintions -->
    <extension point="com.ensoftcorp.open.commons.analyzer">

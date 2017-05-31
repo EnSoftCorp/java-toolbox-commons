@@ -13,5 +13,6 @@ Bundle-ActivationPolicy: lazy
 Export-Package: com.ensoftcorp.open.java.commons.analysis,
  com.ensoftcorp.open.java.commons.analyzers,
  com.ensoftcorp.open.java.commons.filters,
+ com.ensoftcorp.open.java.commons.preferences,
  com.ensoftcorp.open.java.commons.subsystems,
  com.ensoftcorp.open.java.commons.wishful
