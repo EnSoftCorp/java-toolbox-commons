@@ -39,7 +39,7 @@ public class PackageAnalysis {
 	 * @return
 	 */
 	public static Q getPackageDeclarations(String basePackageName){
-		return CommonQueries.declarations(Common.universe(), getPackageWithSubpackages(basePackageName), TraversalDirection.FORWARD);
+		return CommonQueries.declarations(Common.universe(), getPackageWithSubpackages(basePackageName));
 	}
 	
 

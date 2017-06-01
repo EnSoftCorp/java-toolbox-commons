@@ -6,7 +6,6 @@ import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
-import com.ensoftcorp.atlas.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 
 /**
@@ -21,61 +20,6 @@ public final class CommonQueries {
 	private CommonQueries() {}
 	
 	// begin wrapper queries
-	
-	/**
-	 * Produces a call graph. Traverses call edges in the given direction(s)
-	 * from the origin.
-	 * 
-	 * Equivalent to call(index(), origin, direction).
-	 * 
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q call(Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.call(origin, direction);
-	}
-	
-	/**
-	 * Produces a call graph. Traverses call edges in the given direction(s)
-	 * from the origin. Uses only the given context for the traversal.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q call(Q context, Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.call(context, origin, direction);
-	}
-	
-	/**
-	 * Produces a call graph. Traverses call edges in the given direction(s)
-	 * from the origin. Traverses one step only. 
-	 * 
-	 * Equivalent to callStep(index(), origin, direction).
-	 * 
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q callStep(Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.callStep(origin, direction);
-	}
-	
-	/**
-	 * Produces a call graph. Traverses call edges in the given direction(s)
-	 * from the origin. Traverses one step only. Uses only the given context for
-	 * the traversal.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q callStep(Q context, Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.callStep(context, origin, direction);
-	}
 	
 	/**
 	 * Returns all references to class literals (Type.class) for the given
@@ -112,62 +56,6 @@ public final class CommonQueries {
 	}
 	
 	/**
-	 * Produces a data flow graph. Traverses data flow edges in the given
-	 * direction(s) from the origin. 
-	 * 
-	 * Equivalent to data(index(), origin, direction).
-	 * 
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q data(Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.data(origin, direction);
-	}
-	
-	/**
-	 * Produces a data flow graph. Traverses data flow edges in the given
-	 * direction(s) from the origin. Uses only the given context for the
-	 * traversal.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q data(Q context, Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.data(context, origin, direction);
-	}
-	
-	/**
-	 * Produces a data flow graph. Traverses data flow edges in the given
-	 * direction(s) from the origin. Traverses one step only. 
-	 * 
-	 * Equivalent to dataStep(index(), origin, direction).
-	 * 
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q dataStep(Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.dataStep(origin, direction);
-	}
-	
-	/**
-	 * Produces a data flow graph. Traverses data flow edges in the given
-	 * direction(s) from the origin. Traverses one step only. Uses only the
-	 * given context for the traversal.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q dataStep(Q context, Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.dataStep(context, origin, direction);
-	}
-	
-	/**
 	 * Produces a declarations (contains) graph. 
 	 * 
 	 * Equivalent to declarations(index(), origin).
@@ -180,20 +68,6 @@ public final class CommonQueries {
 	}
 	
 	/**
-	 * Produces a declarations (contains) graph. Traverses contains edges in the
-	 * given direction(s) from the origin. 
-	 * 
-	 * Equivalent to declarations(index(), origin, direction).
-	 * 
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q declarations(Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.declarations(origin, direction);
-	}
-	
-	/**
 	 * Produces a declarations (contains) graph. Uses only the given context for
 	 * the traversal.
 	 * 
@@ -203,48 +77,6 @@ public final class CommonQueries {
 	 */
 	public static Q declarations(Q context, Q origin){
 		return com.ensoftcorp.atlas.java.core.script.CommonQueries.declarations(context, origin);
-	}
-	
-	/**
-	 * Produces a declarations (contains) graph. Traverses contains edges in the
-	 * given direction(s) from the origin. Uses only the given context for the
-	 * traversal.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q declarations(Q context, Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.declarations(context, origin, direction);
-	}
-	
-	/**
-	 * Produces a declarations (contains) graph. Traverses contains edges in the
-	 * given direction(s) from the origin. Traverses one step only. 
-	 * 
-	 * Equivalent to declarationsStep(index(), origin, direction).
-	 * 
-	 * @param origin
-	 * @param direction
-	 * @return
-	 */
-	public static Q declarationsStep(Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.declarationsStep(origin, direction);
-	}
-	
-	/**
-	 * Produces a declarations (contains) graph. Traverses contains edges in the
-	 * given direction(s) from the origin. Traverses one step only. Uses only
-	 * the given context for the traversal.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q declarationsStep(Q context, Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.declarationsStep(context, origin, direction);
 	}
 	
 	/**
@@ -550,142 +382,6 @@ public final class CommonQueries {
 	}
 	
 	/**
-	 * Returns the overrides graph for the given methods.
-	 * 
-	 * Equivalent to overrides(index(), methods, direction).
-	 * 
-	 * @param methods
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q overrides(Q methods, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.overrides(methods, direction);
-	}
-	
-	/**
-	 * Returns the overrides graph for the given methods within the given
-	 * context.
-	 * 
-	 * @param context
-	 * @param methods
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q overrides(Q context, Q methods, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.overrides(context, methods, direction);
-	}
-	
-	/**
-	 * Starting from the given origin, returns the traversal in the given
-	 * direction(s) along all edges in the given context.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q traverse(Q context, Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.traverse(context, origin, direction);
-	}
-	
-	/**
-	 * Starting from the given origin, returns the traversal in the given
-	 * direction(s) along all edges of the given kinds.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @param edgeTags
-	 * @return the query expression
-	 */
-	public static Q traverse(Q context, Q origin, TraversalDirection direction, String... edgeTags){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.traverse(context, origin, direction, edgeTags);
-	}
-	
-	/**
-	 * Starting from the given origin, returns the traversal in the given
-	 * direction(s) along all edges in the given context.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q traverseStep(Q context, Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.traverseStep(context, origin, direction);
-	}
-	
-	/**
-	 * Starting from the given origin, returns the traversal in the given
-	 * direction(s) along all edges of the given kinds.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @param edgeTags
-	 * @return the query expression
-	 */
-	public static Q traverseStep(Q context, Q origin, TraversalDirection direction, String... edgeTags){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.traverseStep(context, origin, direction, edgeTags);
-	}
-	
-	/**
-	 * Produces a type hierarchy. Traverses supertype edges in the given
-	 * direction(s) from the origin.
-	 * 
-	 * Equivalent to typeHierarchy(index(), origin, direction).
-	 * 
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q typeHierarchy(Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.typeHierarchy(origin, direction);
-	}
-	
-	/**
-	 * Produces a type hierarchy. Traverses supertype edges in the given
-	 * direction(s) from the origin. Uses only the given context for the
-	 * traversal.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q typeHierarchy(Q context, Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.typeHierarchy(context, origin, direction);
-	}
-	
-	/**
-	 * Produces a type hierarchy. Traverses supertype edges in the given
-	 * direction(s) from the origin. Traverses one step only.
-	 * 
-	 * Equivalent to typeHierarchy(index(), origin, direction).
-	 * 
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q typeHierarchyStep(Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.typeHierarchyStep(origin, direction);
-	}
-	
-	/**
-	 * Produces a type hierarchy. Traverses supertype edges in the given
-	 * direction(s) from the origin. Traverses one step only. Uses only the
-	 * given context for the traversal.
-	 * 
-	 * @param context
-	 * @param origin
-	 * @param direction
-	 * @return the query expression
-	 */
-	public static Q typeHierarchyStep(Q context, Q origin, TraversalDirection direction){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.typeHierarchyStep(context, origin, direction);
-	}
-	
-	/**
 	 * Returns the number of edges contained.
 	 * @param toCount
 	 * @return
@@ -755,20 +451,20 @@ public final class CommonQueries {
 	}
 	
 	/**
-	 * Everything declared under the given methods, but NOT declared under
-	 * additional methods or types. Retrieves declarations of only this method.
+	 * Everything declared under the given functions, but NOT declared under
+	 * additional functions or types. Retrieves declarations of only this function.
 	 * Results are only returned if they are within the given context.
 	 * 
 	 * @param origin
 	 * @return
 	 */
 	public static Q localDeclarations(Q origin) {
-		return localDeclarations(Common.universe(), origin);
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.localDeclarations(origin);
 	}
 
 	/**
-	 * Everything declared under the given methods, but NOT declared under
-	 * additional methods or types. Retrieves declarations of only this method.
+	 * Everything declared under the given functions, but NOT declared under
+	 * additional functions or types. Retrieves declarations of only this function.
 	 * Results are only returned if they are within the given context.
 	 * 
 	 * @param context
@@ -776,13 +472,11 @@ public final class CommonQueries {
 	 * @return
 	 */
 	public static Q localDeclarations(Q context, Q origin) {
-		Q dec = context.edgesTaggedWithAny(XCSG.Contains);
-		dec = dec.differenceEdges(dec.reverseStep(dec.nodesTaggedWithAny(XCSG.Type)));
-		return dec.forward(origin);
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.localDeclarations(context, origin);
 	}
 
 	/**
-	 * Returns the direct callers of the given methods.
+	 * Returns the direct callers of the given functions.
 	 * 
 	 * Operates in the index context.
 	 * 
@@ -790,11 +484,11 @@ public final class CommonQueries {
 	 * @return
 	 */
 	public static Q callers(Q origin) {
-		return callers(Common.universe(), origin);
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.callers(origin);
 	}
 
 	/**
-	 * Returns the direct callers of the given methods.
+	 * Returns the direct callers of the given functions.
 	 * 
 	 * Operates in the given context.
 	 * 
@@ -803,11 +497,11 @@ public final class CommonQueries {
 	 * @return
 	 */
 	public static Q callers(Q context, Q origin) {
-		return callStep(context, origin, TraversalDirection.REVERSE).retainEdges().roots();
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.callers(context, origin);
 	}
 
 	/**
-	 * Returns the subset of the given methods which are called.
+	 * Returns the subset of the given functions which are called.
 	 * 
 	 * Operates in the index context.
 	 * 
@@ -815,11 +509,11 @@ public final class CommonQueries {
 	 * @return
 	 */
 	public static Q called(Q origin) {
-		return called(Common.universe(), origin);
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.called(origin);
 	}
 
 	/**
-	 * Returns the subset of the given methods which are called. Results are
+	 * Returns the subset of the given functions which are called. Results are
 	 * only returned if they are within the given context.
 	 * 
 	 * @param context
@@ -827,11 +521,11 @@ public final class CommonQueries {
 	 * @return
 	 */
 	public static Q called(Q context, Q origin) {
-		return callStep(context, origin, TraversalDirection.REVERSE).retainEdges().leaves();
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.called(context, origin);
 	}
 
 	/**
-	 * Returns the given methods which were called by the given callers.
+	 * Returns the given functions which were called by the given callers.
 	 * 
 	 * Operates in the index context.
 	 * 
@@ -840,11 +534,11 @@ public final class CommonQueries {
 	 * @return
 	 */
 	public static Q calledBy(Q callers, Q called) {
-		return calledBy(Common.universe(), callers, called);
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.calledBy(callers, called);
 	}
 
 	/**
-	 * Returns the given methods which were called by the given callers. Results
+	 * Returns the given functions which were called by the given callers. Results
 	 * are only returned if they are within the given context.
 	 * 
 	 * @param context
@@ -853,43 +547,43 @@ public final class CommonQueries {
 	 * @return
 	 */
 	public static Q calledBy(Q context, Q callers, Q called) {
-		return context.edgesTaggedWithAny(XCSG.Call).betweenStep(callers, called).retainEdges().leaves();
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.calledBy(context, callers, called);
 	}
 	
 	/**
 	 * 
-	 * @param methods
-	 * @return the control flow graph under the method
+	 * @param functions
+	 * @return the control flow graph under the function
 	 */
-	public static Q cfg(Q methods) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(methods);
+	public static Q cfg(Q functions) {
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(functions);
 	}
 	
 	/**
 	 * 
-	 * @param method
-	 * @return the control flow graph under the method
+	 * @param function
+	 * @return the control flow graph under the function
 	 */
-	public static Q cfg(Node method) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(method);
+	public static Q cfg(Node function) {
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(function);
 	}
 	
 	/**
 	 * 
-	 * @param methods
-	 * @return the control flow graph (including exceptional control flow) under the method
+	 * @param functions
+	 * @return the control flow graph (including exceptional control flow) under the function
 	 */
-	public static Q excfg(Q methods) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(methods);
+	public static Q excfg(Q functions) {
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(functions);
 	}
 	
 	/**
 	 * 
-	 * @param method
-	 * @return the control flow graph (including exceptional control flow) under the method
+	 * @param function
+	 * @return the control flow graph (including exceptional control flow) under the function
 	 */
-	public static Q excfg(Node method) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(method);
+	public static Q excfg(Node function) {
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(function);
 	}
 
 	/**

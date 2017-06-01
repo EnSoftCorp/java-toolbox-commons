@@ -34,7 +34,7 @@ public class ReflectionUsage extends Property {
 		Q reflectionPackage = Common.universe().pkg("java.lang.reflect");
 		Q reflectionMethods = reflectionPackage.children().nodesTaggedWithAny(XCSG.Method);
 		Q objectMethodOverrides = Common.edges(XCSG.Overrides).reverse(
-				CommonQueries.declarations(Common.typeSelect("java.lang", "Object"), TraversalDirection.FORWARD).nodesTaggedWithAny(XCSG.Method));
+				CommonQueries.declarations(Common.typeSelect("java.lang", "Object")).nodesTaggedWithAny(XCSG.Method));
 		reflectionMethods = reflectionMethods.difference(objectMethodOverrides, Common.methods("getName"), Common.methods("getSimpleName"));
 		
 		List<Result> results = new LinkedList<Result>();

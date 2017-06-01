@@ -14,7 +14,6 @@ import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
-import com.ensoftcorp.open.commons.analysis.CommonQueries;
 
 public class ThrowableAnalysis {
 	
@@ -121,9 +120,16 @@ public class ThrowableAnalysis {
 	 */
 	public static Q stack(Q context, Q origin, TraversalDirection direction){
 		context = context.edgesTaggedWithAny(Edge.CALL, Edge.CONTROL_FLOW, Edge.DECLARES);
-		Q res = CommonQueries.traverse(context, origin, direction);
-		res = res.differenceEdges(res.edgesTaggedWithAny(Edge.PER_METHOD));
-		return res.nodesTaggedWithAny(Node.METHOD, Node.CONTROL_FLOW, Node.CONTROL_FLOW_PRESENTATION).induce(res);
+		Q result;
+		if(direction == TraversalDirection.FORWARD){
+			result = context.forward(origin);
+		} else if(direction == TraversalDirection.REVERSE){
+			result = context.reverse(origin);
+		} else {
+			result = context.forward(origin).union(context.reverse(origin));
+		}
+		result = result.differenceEdges(result.edgesTaggedWithAny(Edge.PER_METHOD));
+		return result.nodesTaggedWithAny(Node.METHOD, Node.CONTROL_FLOW, Node.CONTROL_FLOW_PRESENTATION).induce(result);
 	}
 	
 	/**
@@ -145,7 +151,9 @@ public class ThrowableAnalysis {
 		Q thrown = throwContext.forwardStep(input).retainEdges();
 		Q throwers = thrown.roots();
 		Q thrownTypes = thrown.leaves();
-		Q thrownTypeHierarchy = CommonQueries.typeHierarchy(thrownTypes, TraversalDirection.FORWARD);
+		
+		Q supertypeEdges = Common.universe().edges(XCSG.Supertype);
+		Q thrownTypeHierarchy = supertypeEdges.forward(thrownTypes);
 		
 		Q caught = catchContext.reverseStep(thrownTypeHierarchy).retainEdges();
 		Q caughtTypes = caught.leaves();
@@ -193,7 +201,9 @@ public class ThrowableAnalysis {
 		Q caught = catchContext.edgesTaggedWithAny(Edge.PER_CONTROL_FLOW).forwardStep(input).retainEdges();
 		Q caughtTypes = caught.leaves();
 		Q catchers = caught.roots().nodesTaggedWithAny(Node.CONTROL_FLOW);
-		Q caughtTypeHierarchy = CommonQueries.typeHierarchy(caughtTypes, TraversalDirection.REVERSE);
+		
+		Q supertypeEdges = Common.universe().edges(XCSG.Supertype);
+		Q caughtTypeHierarchy = supertypeEdges.reverse(caughtTypes);
 		
 		Q thrown = throwContext.edgesTaggedWithAny(Edge.PER_CONTROL_FLOW).reverseStep(caughtTypeHierarchy).retainEdges();
 		Q throwers = thrown.roots();
