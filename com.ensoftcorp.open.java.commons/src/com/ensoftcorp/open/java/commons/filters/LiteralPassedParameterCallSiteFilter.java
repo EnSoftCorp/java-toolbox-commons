@@ -29,7 +29,7 @@ public class LiteralPassedParameterCallSiteFilter extends NodeFilter {
 	
 	@Override
 	public String getName() {
-		return "call site Literal Value Passed Parameters";
+		return "Call Site Literal Value Passed Parameters";
 	}
 
 	@Override
