@@ -13,28 +13,28 @@ import com.ensoftcorp.open.commons.filters.InvalidFilterParameterException;
 import com.ensoftcorp.open.commons.filters.NodeFilter;
 
 /**
- * Filters callsite nodes based on how whether the callsite parameter(s) are fixed literal values
+ * Filters call site nodes based on how whether the call site parameter(s) are fixed literal values
  * 
  * @author Ben Holland
  */
-public class LiteralPassedParameterCallsiteFilter extends NodeFilter {
+public class LiteralPassedParameterCallSiteFilter extends NodeFilter {
 
 	private static final String EXCLUDE_MATCHES = "EXCLUDE_MATCHES";
 	private static final String PARAMETER_INDEXES = "PARAMETER_INDEXES";
 
-	public LiteralPassedParameterCallsiteFilter() {
-		this.addPossibleFlag(EXCLUDE_MATCHES, "Retain only callsites whose selected passed parameters are not literals.");
+	public LiteralPassedParameterCallSiteFilter() {
+		this.addPossibleFlag(EXCLUDE_MATCHES, "Retain only call sites whose selected passed parameters are not literals.");
 		this.addPossibleParameter(PARAMETER_INDEXES, String.class, false, "A comma seperated list of integers denoting the parameter indexes to consider. Index values begin at 0. By default all parameters are considered.");
 	}
 	
 	@Override
 	public String getName() {
-		return "Callsite Literal Value Passed Parameters";
+		return "call site Literal Value Passed Parameters";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Filters callsite nodes based on how whether the callsite parameter(s) are fixed literal values.";
+		return "Filters call site nodes based on how whether the call site parameter(s) are fixed literal values.";
 	}
 
 	@Override
@@ -45,9 +45,9 @@ public class LiteralPassedParameterCallsiteFilter extends NodeFilter {
 		Q parameterPassedToEdges = Common.universe().edges(XCSG.ParameterPassedTo);
 		Q dataFlowEdges = Common.universe().edges(XCSG.DataFlow_Edge);
 		
-		AtlasSet<Node> literalOnlyCallsites = new AtlasHashSet<Node>();
-		for(Node callsite : input.eval().nodes()){
-			Q parametersPass = parameterPassedToEdges.predecessors(Common.toQ(callsite));
+		AtlasSet<Node> literalOnlyCallSites = new AtlasHashSet<Node>();
+		for(Node callSite : input.eval().nodes()){
+			Q parametersPass = parameterPassedToEdges.predecessors(Common.toQ(callSite));
 			if(this.isParameterSet(PARAMETER_INDEXES, parameters)){
 				Integer[] indexes = getParameterIndexes(parameters);
 				parametersPass = parametersPass.selectNode(XCSG.parameterIndex, (Object[]) indexes);
@@ -56,11 +56,11 @@ public class LiteralPassedParameterCallsiteFilter extends NodeFilter {
 			// if all passed parameter values are literals, add to results
 			long parameterPassValuesSize = parameterPassValues.eval().nodes().size();
 			if(parameterPassValuesSize > 0 && parameterPassValuesSize == parameterPassValues.nodes(XCSG.Literal).eval().nodes().size()){
-				literalOnlyCallsites.add(callsite);
+				literalOnlyCallSites.add(callSite);
 			}
 		}
 		
-		Q result = Common.toQ(literalOnlyCallsites);
+		Q result = Common.toQ(literalOnlyCallSites);
 		if(isFlagSet(EXCLUDE_MATCHES, parameters)){
 			return input.difference(result);
 		} else {

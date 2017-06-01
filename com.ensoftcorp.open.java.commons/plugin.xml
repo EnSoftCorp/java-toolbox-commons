@@ -88,7 +88,12 @@
    
    <!-- adds filter definitions -->
    <extension point="com.ensoftcorp.open.commons.filter">
-      <filter class="com.ensoftcorp.open.java.commons.filters.LiteralPassedParameterCallsiteFilter"></filter>
+      <filter class="com.ensoftcorp.open.java.commons.filters.LiteralPassedParameterCallSiteFilter"></filter>
+   </extension>
+   
+   <!-- adds language specific analyses -->
+   <extension point="com.ensoftcorp.open.commons.language.analysis">
+      <language-specific-analysis class="com.ensoftcorp.open.java.commons.analysis.CallSiteAnalysis"></language-specific-analysis>
    </extension>
 
 </plugin>

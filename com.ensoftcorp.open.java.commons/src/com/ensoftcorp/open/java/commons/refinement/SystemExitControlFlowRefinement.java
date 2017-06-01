@@ -11,9 +11,9 @@ import com.ensoftcorp.atlas.core.query.Attr;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
+import com.ensoftcorp.open.commons.analysis.CallSiteAnalysis;
 import com.ensoftcorp.open.commons.analysis.G;
 import com.ensoftcorp.open.commons.codemap.PrioritizedCodemapStage;
-import com.ensoftcorp.open.java.commons.analysis.CallSiteAnalysis;
 import com.ensoftcorp.open.java.commons.log.Log;
 import com.ensoftcorp.open.java.commons.preferences.JavaCommonsPreferences;
 
@@ -50,10 +50,10 @@ public class SystemExitControlFlowRefinement extends PrioritizedCodemapStage {
 		if(JavaCommonsPreferences.isSystemExitControlFlowRefinementEnabled()){
 			Log.info("Refining control flow following System.exit...");
 			// remove outgoing control flow edges after System.exit
-			Q exit = findMethod("java.lang.System", "exit");
-			Q callSites = CallSiteAnalysis.getCallSites(exit);
+			AtlasSet<Node> exits = findMethod("java.lang.System", "exit").eval().nodes();
+			AtlasSet<Node> callSites = CallSiteAnalysis.getCallSites(exits);
 			AtlasSet<Edge> controlFlowEdgesToDelete = new AtlasHashSet<Edge>();
-			for (Node callSite : callSites.eval().nodes()) {
+			for (Node callSite : callSites) {
 				Node controlFlowNode = G.in(Graph.U, callSite, XCSG.Contains);
 				AtlasSet<Edge> outEdges = G.outEdges(Graph.U, controlFlowNode, XCSG.ControlFlow_Edge);
 				controlFlowEdgesToDelete.addAll(outEdges);
