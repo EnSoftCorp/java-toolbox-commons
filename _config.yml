@@ -6,7 +6,7 @@
 name: Java Toolbox Commons
 
 # Short bio or description (displayed in the header)
-description: A set of common utilities for Java program analysis using Atlas
+description: A collection of utilities for analyzing Java programs
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://ensoftcorp.github.io/java-toolbox-commons/images/toolbox.png
