@@ -1,8 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Automaton
-Bundle-SymbolicName: dk.brics.automaton
-Bundle-Version: 1.11.8
-Bundle-ClassPath: .
-Export-Package: dk.brics.automaton;version="1.11.8"
+Bundle-SymbolicName: dk.brics.automaton;singleton:=true
+Bundle-Version: 1.11.8.qualifier
+Bundle-Vendor: dk.brics
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: dk.brics.automaton
