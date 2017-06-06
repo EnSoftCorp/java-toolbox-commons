@@ -8,8 +8,7 @@ Bundle-Vendor: EnSoft Corp.
 Require-Bundle: com.ensoftcorp.atlas.java.core;bundle-version="3.1.0";visibility:=reexport,
  com.ensoftcorp.atlas.java.ui;bundle-version="3.1.0";visibility:=reexport,
  com.ensoftcorp.open.commons;bundle-version="3.1.0";visibility:=reexport,
- dk.brics.jsa;bundle-version="2.1.1",
- ca.mcgill.sable.soot.lib
+ dk.brics.jsa;bundle-version="2.1.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ensoftcorp.open.java.commons.analysis,
