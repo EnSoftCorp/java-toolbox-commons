@@ -2,7 +2,6 @@ package com.ensoftcorp.open.java.commons.analysis;
 
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
-import com.ensoftcorp.atlas.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analysis.CommonQueries;
 
