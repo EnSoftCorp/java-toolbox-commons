@@ -38,9 +38,9 @@ public class LiteralPassedParameterCallSiteFilter extends NodeFilter {
 	}
 
 	@Override
-	public Q filter(Q input, Map<String,Object> parameters) throws InvalidFilterParameterException {
+	protected Q filterInput(Q input, Map<String,Object> parameters) throws InvalidFilterParameterException {
 		checkParameters(parameters);
-		input = super.filter(input, parameters);
+		input = super.filterInput(input, parameters);
 		
 		Q parameterPassedToEdges = Common.universe().edges(XCSG.ParameterPassedTo);
 		Q dataFlowEdges = Common.universe().edges(XCSG.DataFlow_Edge);
