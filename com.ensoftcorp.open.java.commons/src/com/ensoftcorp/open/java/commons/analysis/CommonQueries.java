@@ -450,28 +450,28 @@ public final class CommonQueries {
 	}
 	
 	/**
-	 * Everything declared under the given functions, but NOT declared under
+	 * All nodes declared under the given functions, but NOT declared under
 	 * additional functions or types. Retrieves declarations of only this function.
 	 * Results are only returned if they are within the given context.
 	 * 
-	 * @param origin
+	 * @param functions
 	 * @return
 	 */
-	public static Q localDeclarations(Q origin) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.localDeclarations(origin);
+	public static Q localDeclarations(Q functions) {
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.localDeclarations(functions);
 	}
 
 	/**
-	 * Everything declared under the given functions, but NOT declared under
+	 * All nodes declared under the given functions, but NOT declared under
 	 * additional functions or types. Retrieves declarations of only this function.
 	 * Results are only returned if they are within the given context.
 	 * 
 	 * @param context
-	 * @param origin
+	 * @param functions
 	 * @return
 	 */
-	public static Q localDeclarations(Q context, Q origin) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.localDeclarations(context, origin);
+	public static Q localDeclarations(Q context, Q functions) {
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.localDeclarations(context, functions);
 	}
 
 	/**
