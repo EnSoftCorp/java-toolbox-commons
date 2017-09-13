@@ -23,6 +23,7 @@ Note that version numbers are based off [Atlas](http://www.ensoftcorp.com/atlas/
 
 ### 3.1.7
 - Updated dependencies
+- Embedded javadoc with plugin
 
 ### 3.1.6
 - Bug fixes
