@@ -21,6 +21,16 @@ If you want to install from source for bleeding edge changes, first grab a copy 
 ## Changelog
 Note that version numbers are based off [Atlas](http://www.ensoftcorp.com/atlas/download/) version numbers.
 
+### 3.1.7
+- Updated dependencies
+
+### 3.1.6
+- Bug fixes
+- Updated dependencies and fixes for upstream changes
+- Adding filter implementations
+- Minor improvements to subsystem tagging
+- Refactoring common queries
+
 ### 3.1.0
 - Added optional control flow refinement codemaps
 - Added Java call site analysis implementation
