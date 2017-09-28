@@ -82,7 +82,7 @@ public class JavaStopGap {
 			classVariableAssignmentsToUntag.add(classVariableAssignmentToUntag);
 		}
 		while (!classVariableAssignmentsToUntag.isEmpty()) {
-			Node classVariableAssignmentToUntag = classVariableAssignmentsToUntag.getFirst();
+			Node classVariableAssignmentToUntag = classVariableAssignmentsToUntag.one();
 			classVariableAssignmentsToUntag.remove(classVariableAssignmentToUntag);
 			classVariableAssignmentToUntag.tags().remove(CLASS_VARIABLE_ASSIGNMENT);
 			classVariableAssignmentToUntag.tags().remove(CLASS_VARIABLE_ACCESS);
@@ -94,7 +94,7 @@ public class JavaStopGap {
 			classVariableValuesToUntag.add(classVariableValueToUntag);
 		}
 		while (!classVariableValuesToUntag.isEmpty()) {
-			Node classVariableValueToUntag = classVariableValuesToUntag.getFirst();
+			Node classVariableValueToUntag = classVariableValuesToUntag.one();
 			classVariableValuesToUntag.remove(classVariableValueToUntag);
 			classVariableValueToUntag.tags().remove(CLASS_VARIABLE_VALUE);
 			classVariableValueToUntag.tags().remove(CLASS_VARIABLE_ACCESS);
