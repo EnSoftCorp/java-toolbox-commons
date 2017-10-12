@@ -1,6 +1,5 @@
 package com.ensoftcorp.open.java.commons.bytecode;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,6 +39,11 @@ public class JarModifier {
 	 * The directory that stores the manifest and jar signatures
 	 */
 	public static final String META_INF = "META-INF";
+	
+	/**
+	 * The standard manifest path
+	 */
+	public static final String MANIFEST_PATH = META_INF + SEPERATOR + "MANIFEST.MF";
 	
 	/**
 	 * Extracts a Jar file
@@ -97,14 +101,13 @@ public class JarModifier {
 			jarEntries.put(currentEntry.getName(), resetEntry);
 		}
 		
-		String manifestPath = META_INF + SEPERATOR + "MANIFEST.MF";
-		JarEntry jarManifestEntry = jar.getJarEntry(manifestPath);
+		JarEntry jarManifestEntry = jar.getJarEntry(MANIFEST_PATH);
 		// if manifest not found then search manually
 		if (jarManifestEntry == null) {
 			Enumeration<JarEntry> entries = jar.entries();
 			while (entries.hasMoreElements()) {
 				jarManifestEntry = (JarEntry) entries.nextElement();
-				if (manifestPath.equalsIgnoreCase(jarManifestEntry.getName())){
+				if (MANIFEST_PATH.equalsIgnoreCase(jarManifestEntry.getName())){
 					break;
 				} else {
 					jarManifestEntry = null;
@@ -129,26 +132,18 @@ public class JarModifier {
 	}
 	
 	public byte[] extractEntry(String entry) throws IOException {
-		JarInputStream zin = new JarInputStream(new BufferedInputStream(new FileInputStream(jarFile)));
-		JarEntry currentEntry = null;
-		while ((currentEntry = zin.getNextJarEntry()) != null) {
-			if (currentEntry.getName().equals(entry)) {
-				// currentEntry.getSize() may not be accurate, so read bytes into a stream first
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				byte[] buf = new byte[4096];
-				while (true) {
-					int n = zin.read(buf);
-					if (n < 0){
-						break;
-					}
-					baos.write(buf, 0, n);
-				}
-				zin.close();
-				return baos.toByteArray();
-			}
+		JarEntry jarEntry = jarEntries.get(entry);
+		JarFile jar = new JarFile(jarFile);
+		if(jarEntry != null){
+			InputStream is = jar.getInputStream(jarEntry);
+			byte[] bytes = new byte[is.available()];
+			is.read(bytes);
+			jar.close();
+			return bytes;
+		} else {
+			jar.close();
+			return null;
 		}
-		zin.close();
-		return null;
 	}
 	
 	/**
@@ -223,6 +218,13 @@ public class JarModifier {
 			// add a new entry
 			jarEntries.put(entry, newEntry);
 			jarEntriesToAdd.put(entry, bytes);
+			
+			// if we've updated the manifest then re-parse it
+			if(entry.equals(MANIFEST_PATH)){
+				Manifest manifest = new Manifest();
+				manifest.read(new ByteArrayInputStream(bytes));
+				this.manifest = manifest;
+			}
 		}
 	}
 	
@@ -253,6 +255,13 @@ public class JarModifier {
 			// add a new entry
 			jarEntries.put(entry.getName(), newEntry);
 			jarEntriesToAdd.put(entry.getName(), bytes);
+			
+			// if we've updated the manifest then re-parse it
+			if(entry.getName().equals(MANIFEST_PATH)){
+				Manifest manifest = new Manifest();
+				manifest.read(new ByteArrayInputStream(bytes));
+				this.manifest = manifest;
+			}
 		}
 	}
 	
@@ -273,6 +282,11 @@ public class JarModifier {
 	public void remove(JarEntry entry){
 		jarEntries.remove(entry.getName());
 		jarEntriesToAdd.remove(entry.getName());
+		
+		// if we've removed the manifest then to null it out
+		if(entry.getName().equals(MANIFEST_PATH)){
+			this.manifest = null;
+		}
 	}
 	
 	/**
@@ -290,6 +304,10 @@ public class JarModifier {
 		}
 		for(String entryToRemove : entriesToRemove){
 			jarEntries.remove(entryToRemove);
+			// if we've removed the manifest then to null it out
+			if(entryToRemove.equals(MANIFEST_PATH)){
+				this.manifest = null;
+			}
 		}	
 	}
 	
@@ -319,6 +337,10 @@ public class JarModifier {
 		}
 		for(String entryToRemove : entriesToRemove){
 			jarEntriesToAdd.remove(entryToRemove);
+			// if we've removed the manifest then to null it out
+			if(entryToRemove.equals(MANIFEST_PATH)){
+				this.manifest = null;
+			}
 		}
 	}
 	

@@ -1,17 +1,14 @@
 package com.ensoftcorp.open.java.commons.bytecode;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarException;
 import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
 /**
@@ -88,26 +85,18 @@ public class JarInspector {
 	}
 	
 	public byte[] extractEntry(String entry) throws IOException {
-		JarInputStream zin = new JarInputStream(new BufferedInputStream(new FileInputStream(jarFile)));
-		JarEntry currentEntry = null;
-		while ((currentEntry = zin.getNextJarEntry()) != null) {
-			if (currentEntry.getName().equals(entry)) {
-				// currentEntry.getSize() may not be accurate, so read bytes into a stream first
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				byte[] buf = new byte[4096];
-				while (true) {
-					int n = zin.read(buf);
-					if (n < 0){
-						break;
-					}
-					baos.write(buf, 0, n);
-				}
-				zin.close();
-				return baos.toByteArray();
-			}
+		JarEntry jarEntry = jarEntries.get(entry);
+		JarFile jar = new JarFile(jarFile);
+		if(jarEntry != null){
+			InputStream is = jar.getInputStream(jarEntry);
+			byte[] bytes = new byte[is.available()];
+			is.read(bytes);
+			jar.close();
+			return bytes;
+		} else {
+			jar.close();
+			return null;
 		}
-		zin.close();
-		return null;
 	}
 	
 	/**
