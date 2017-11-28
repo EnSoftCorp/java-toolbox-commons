@@ -21,6 +21,11 @@ If you want to install from source for bleeding edge changes, first grab a copy 
 ## Changelog
 Note that version numbers are based off [Atlas](http://www.ensoftcorp.com/atlas/download/) version numbers.
 
+### 3.3.0
+- Bug fix for missing subsystem tag hierarchy on index loads
+- Added some basic jar and bytecode utilities
+- Code optimizations
+
 ### 3.1.7
 - Updated dependencies
 - Embedded javadoc with plugin
