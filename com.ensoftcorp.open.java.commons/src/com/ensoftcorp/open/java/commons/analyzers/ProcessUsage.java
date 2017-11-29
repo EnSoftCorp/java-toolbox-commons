@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.java.core.script.Common;
 import com.ensoftcorp.open.commons.analysis.CommonQueries;
@@ -32,9 +33,11 @@ public class ProcessUsage extends Property {
 		Q runtimeType = Common.typeSelect("java.lang", "Runtime");
 		Q runtimeMethods = runtimeType.children().nodesTaggedWithAny(XCSG.Method);
 		Q execMethods = runtimeMethods.intersection(Common.methods("exec"));
+		Q interactions = Query.resolve(null, CommonQueries.interactions(context, execMethods, XCSG.Call));
+		
 		List<Result> results = new LinkedList<Result>();
 		for(Node execMethod : execMethods.eval().nodes()){
-			Q interaction = CommonQueries.interactions(context, Common.toQ(execMethod), XCSG.Call);
+			Q interaction = CommonQueries.interactions(interactions, Common.toQ(execMethod), XCSG.Call);
 			if(!interaction.eval().edges().isEmpty()){
 				results.add(new Result("Process Usage", interaction));
 			}

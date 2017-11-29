@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.java.core.script.Common;
 import com.ensoftcorp.open.commons.analysis.CommonQueries;
@@ -29,10 +30,12 @@ public class NativeCodeUsage extends Property {
 
 	@Override
 	public List<Result> getResults(Q context) {
-		Q nativeMethods = context.nodesTaggedWithAny(XCSG.Java.nativeMethod);
+		Q nativeMethods = context.nodes(XCSG.Java.nativeMethod);
+		Q interactions = Query.resolve(null, CommonQueries.interactions(context, nativeMethods, XCSG.Call));
+		
 		List<Result> results = new LinkedList<Result>();
-		for(Node nativeMethod : nativeMethods.eval().nodes()){
-			Q interaction = CommonQueries.interactions(context, Common.toQ(nativeMethod), XCSG.Call);
+		for(Node nativeMethod : interactions.intersection(nativeMethods).eval().nodes()){
+			Q interaction = CommonQueries.interactions(interactions, Common.toQ(nativeMethod), XCSG.Call);
 			if(!interaction.eval().edges().isEmpty()){
 				results.add(new Result("Native Method Usage", interaction));
 			}
