@@ -92,33 +92,33 @@ public final class CommonQueries {
 	
 	/**
 	 * Returns direct edges of the given kinds which lay immediately between the
-	 * first group and second group of nodes. In the case that the selected edge
-	 * kinds have multiple levels of granularity, only the method level of
-	 * granularity is used.
+	 * first group and second group of nodes.
 	 * 
 	 * @param first
 	 * @param second
 	 * @param edgeTags
 	 * @return the query expression
+	 * @deprecated use com.ensoftcorp.open.commons.analysis.CommonQueries.interactions
 	 */
+	@Deprecated 
 	public static Q interactions(Q first, Q second, String... edgeTags){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.interactions(first, second, edgeTags);
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.interactions(first, second, edgeTags);
 	}
 	
 	/**
 	 * Returns direct edges of the given kinds which lay immediately between the
-	 * first group and second group of nodes. In the case that the selected edge
-	 * kinds have multiple levels of granularity, only the method level of
-	 * granularity is used. Uses only the given context for the traversal.
+	 * first group and second group of nodes.
 	 * 
 	 * @param context
 	 * @param first
 	 * @param second
 	 * @param edgeTags
 	 * @return the query expression
+	 * @deprecated use com.ensoftcorp.open.commons.analysis.CommonQueries.interactions
 	 */
+	@Deprecated 
 	public static Q interactions(Q context, Q first, Q second, String... edgeTags){
-		return com.ensoftcorp.atlas.java.core.script.CommonQueries.interactions(context, first, second, edgeTags);
+		return com.ensoftcorp.open.commons.analysis.CommonQueries.interactions(context, first, second, edgeTags);
 	}
 	
 	/**
