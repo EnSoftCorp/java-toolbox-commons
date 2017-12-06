@@ -55,6 +55,7 @@ public class SystemExitControlFlowRefinement extends PrioritizedCodemapStage {
 			AtlasSet<Edge> controlFlowEdgesToDelete = new AtlasHashSet<Edge>();
 			for (Node callSite : callSites) {
 				Node controlFlowNode = G.in(Graph.U, callSite, XCSG.Contains);
+				controlFlowNode.tag(XCSG.controlFlowExitPoint);
 				AtlasSet<Edge> outEdges = G.outEdges(Graph.U, controlFlowNode, XCSG.ControlFlow_Edge);
 				controlFlowEdgesToDelete.addAll(outEdges);
 			}
