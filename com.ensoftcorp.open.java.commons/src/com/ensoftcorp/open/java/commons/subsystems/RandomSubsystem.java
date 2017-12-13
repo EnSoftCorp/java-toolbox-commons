@@ -31,7 +31,7 @@ public class RandomSubsystem extends JavaSubsystem {
 	
 	@Override
 	public String[] getTypes() {
-		return new String[] { "java.util.Random", "java.security.SecureRandom" };
+		return new String[] { "java.util.Random", "java.security.SecureRandom", "java.util.concurrent.ThreadLocalRandom" };
 	}
 	
 	@Override

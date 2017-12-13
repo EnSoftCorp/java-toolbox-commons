@@ -48,7 +48,7 @@ public class MainClassAnalysisPropertiesInitializer extends AnalysisPropertiesIn
 				javaMainClasses.add(javaMainClass);
 			}
 			if(!javaMainClasses.isEmpty()){
-				String result = javaMainClasses.toString();
+				String result = javaMainClasses.toString().replace(" ", "");
 				properties.setProperty(JAVA_MAIN_CLASSES, result.substring(1, result.length()-1));
 			}
 			
@@ -74,7 +74,7 @@ public class MainClassAnalysisPropertiesInitializer extends AnalysisPropertiesIn
 				}
 			}
 			if(!indexJarMainClasses.isEmpty()){
-				String result = indexJarMainClasses.toString();
+				String result = indexJarMainClasses.toString().replace(" ", "");
 				properties.setProperty(INDEXED_JAR_MAIN_CLASSES, result.substring(1, result.length()-1));
 			}
 			
@@ -93,7 +93,7 @@ public class MainClassAnalysisPropertiesInitializer extends AnalysisPropertiesIn
 				}
 			}
 			if(!projectJarMainClasses.isEmpty()){
-				String result = projectJarMainClasses.toString();
+				String result = projectJarMainClasses.toString().replace(" ", "");
 				properties.setProperty(PROJECT_JAR_MAIN_CLASSES, result.substring(1, result.length()-1));
 			}
 		}
@@ -129,6 +129,7 @@ public class MainClassAnalysisPropertiesInitializer extends AnalysisPropertiesIn
 		}
 		
 		// if the entry point is not found it will be null
+		programEntryPoint = programEntryPoint == null ? "null" : programEntryPoint;
 		properties.setProperty(JAVA_PROGRAM_ENTRY_POINT, programEntryPoint);
 	}
 
