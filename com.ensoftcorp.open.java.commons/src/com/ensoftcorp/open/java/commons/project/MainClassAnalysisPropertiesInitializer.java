@@ -49,7 +49,7 @@ public class MainClassAnalysisPropertiesInitializer extends AnalysisPropertiesIn
 			}
 			if(!javaMainClasses.isEmpty()){
 				String result = javaMainClasses.toString();
-				properties.setProperty(JAVA_MAIN_CLASSES, result.substring(1, result.length()-2));
+				properties.setProperty(JAVA_MAIN_CLASSES, result.substring(1, result.length()-1));
 			}
 			
 			// add main classes in jar manifest libraries for each library method
@@ -75,7 +75,7 @@ public class MainClassAnalysisPropertiesInitializer extends AnalysisPropertiesIn
 			}
 			if(!indexJarMainClasses.isEmpty()){
 				String result = indexJarMainClasses.toString();
-				properties.setProperty(INDEXED_JAR_MAIN_CLASSES, result.substring(1, result.length()-2));
+				properties.setProperty(INDEXED_JAR_MAIN_CLASSES, result.substring(1, result.length()-1));
 			}
 			
 			// add main classes in jar manifest libraries for jar contained in the project subfolder
@@ -94,26 +94,36 @@ public class MainClassAnalysisPropertiesInitializer extends AnalysisPropertiesIn
 			}
 			if(!projectJarMainClasses.isEmpty()){
 				String result = projectJarMainClasses.toString();
-				properties.setProperty(PROJECT_JAR_MAIN_CLASSES, result.substring(1, result.length()-2));
+				properties.setProperty(PROJECT_JAR_MAIN_CLASSES, result.substring(1, result.length()-1));
 			}
 		}
 		
 		String programEntryPoint = null;
 		Set<String> all = new HashSet<String>(javaMainClasses);
-		all.retainAll(indexJarMainClasses);
-		all.retainAll(projectJarMainClasses);
+		Set<String> indexJarMainClassesTrimmed = new HashSet<String>();
+		for(String value : indexJarMainClasses){
+			String[] split = value.split("/");
+			indexJarMainClassesTrimmed.add(split[split.length-1]);
+		}
+		Set<String> projectJarMainClassesTrimmed = new HashSet<String>();
+		for(String value : projectJarMainClasses){
+			String[] split = value.split("/");
+			projectJarMainClassesTrimmed.add(split[split.length-1]);
+		}
+		all.retainAll(indexJarMainClassesTrimmed);
+		all.retainAll(projectJarMainClassesTrimmed);
 		if(all.size() == 1){
 			programEntryPoint = all.iterator().next();
 		} else {
 			// indexed project
-			Set<String> indexedProject = new HashSet<String>(indexJarMainClasses);
-			indexedProject.retainAll(projectJarMainClasses);
+			Set<String> indexedProject = new HashSet<String>(indexJarMainClassesTrimmed);
+			indexedProject.retainAll(projectJarMainClassesTrimmed);
 			if(indexedProject.size() == 1){
 				programEntryPoint = indexedProject.iterator().next();
 			} else {
 				// just project
 				if(projectJarMainClasses.size() == 1){
-					programEntryPoint = projectJarMainClasses.iterator().next();
+					programEntryPoint = projectJarMainClassesTrimmed.iterator().next();
 				}
 			}
 		}
