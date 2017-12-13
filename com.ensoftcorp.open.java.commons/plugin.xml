@@ -53,6 +53,21 @@
       <codemap class="com.ensoftcorp.open.java.commons.refinement.ThreadRunnableCallSummarization"></codemap>
    </extension>
 
+	<!-- add project analysis properties initializer defintions -->
+   <extension point="com.ensoftcorp.open.commons.analyzer">
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ClassLoaderUsage"></analyzer>
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.NativeCodeUsage"></analyzer>
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ProcessUsage"></analyzer>
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ReflectionUsage"></analyzer>
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.SerializationUsage"></analyzer>
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.SystemExitUsage"></analyzer>
+   </extension>
+   
+   <!-- add analyzer properties initializer definitions -->
+   <extension point="com.ensoftcorp.open.commons.project.properties.initializer">
+      <project-properties-initializer class="com.ensoftcorp.open.java.commons.project.MainClassAnalysisPropertiesInitializer"></project-properties-initializer>
+   </extension>
+
    <!-- add analyzer defintions -->
    <extension point="com.ensoftcorp.open.commons.analyzer">
       <analyzer class="com.ensoftcorp.open.java.commons.analyzers.JavaProgramEntryPoints"></analyzer>
