@@ -65,7 +65,7 @@
    
    <!-- add analyzer properties initializer definitions -->
    <extension point="com.ensoftcorp.open.commons.project.properties.initializer">
-      <project-properties-initializer class="com.ensoftcorp.open.java.commons.project.JarLibraryPropertiesInitializer"></project-properties-initializer>
+      <project-properties-initializer class="com.ensoftcorp.open.java.commons.project.ProjectJarProperties"></project-properties-initializer>
    </extension>
 
    <!-- add analyzer defintions -->
