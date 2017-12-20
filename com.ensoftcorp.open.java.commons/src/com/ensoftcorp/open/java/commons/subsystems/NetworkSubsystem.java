@@ -29,7 +29,7 @@ public class NetworkSubsystem extends JavaSubsystem {
 		return new String[] { "java.net", "java.rmi", "java.rmi.activation", "java.rmi.dgc", "java.rmi.registry",
 				"java.rmi.server", "javax.net", "javax.net.ssl", 
 				"io.netty.util", "io.netty.channel.nio", "io.netty.util.internal", "io.netty.channel.socket.nio", "io.netty.bootstrap",
-				"io.netty.channel", "io.netty.util.concurrent", "io.netty.channel.socket", "io.netty.buffer", "io.netty.util.internal.logging"
+				"io.netty.channel", "io.netty.util.concurrent", "io.netty.channel.socket", "io.netty.buffer", "io.netty.util.internal.logging", "org.apache.commons.fileupload" 
 				};
 	}
 
