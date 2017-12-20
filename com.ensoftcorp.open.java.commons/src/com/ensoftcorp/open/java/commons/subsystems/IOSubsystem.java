@@ -30,7 +30,7 @@ public class IOSubsystem extends JavaSubsystem {
 				"java.nio.charset.spi", "java.nio.file", "java.nio.file.attribute", "java.nio.file.spi",
 				"javax.imageio", "javax.imageio.event", "javax.imageio.metadata", "javax.imageio.plugins.bmp",
 				"javax.imageio.plugins.jpeg", "javax.imageio.spi", "javax.imageio.stream", "javax.print",
-				"javax.print.attribute", "javax.print.attribute.standard", "javax.print.event" };
+				"javax.print.attribute", "javax.print.attribute.standard", "javax.print.event", "org.apache.commons.io" };
 	}
 
 }

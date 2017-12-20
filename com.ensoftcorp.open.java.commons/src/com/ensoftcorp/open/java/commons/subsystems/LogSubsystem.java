@@ -57,8 +57,10 @@ public class LogSubsystem extends JavaSubsystem {
 			"org.apache.log4j.spi", // Contains part of the System Programming Interface (SPI) needed to extend log4j.
 			"org.apache.log4j.varia", // Contains various appenders, filters and other odds and ends.
 			"org.apache.log4j.xml", // XML based components.
-			"org.apache.log4j.xml.examples"
+			"org.apache.log4j.xml.examples",
+			"org.slf4j"	//Slf4j logger
 			};
+
 	}
 
 }
