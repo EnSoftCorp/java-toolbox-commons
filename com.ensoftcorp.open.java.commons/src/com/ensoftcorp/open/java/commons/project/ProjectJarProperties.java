@@ -13,6 +13,8 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -26,6 +28,7 @@ import com.ensoftcorp.open.commons.utilities.OSUtils;
 import com.ensoftcorp.open.commons.utilities.WorkspaceUtils;
 import com.ensoftcorp.open.commons.utilities.project.AnalysisPropertiesInitializer;
 import com.ensoftcorp.open.commons.utilities.project.ProjectAnalysisProperties;
+import com.ensoftcorp.open.java.commons.analysis.SetDefinitions;
 import com.ensoftcorp.open.java.commons.bytecode.JarInspector;
 import com.ensoftcorp.open.java.commons.log.Log;
 
@@ -35,6 +38,7 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 	private static final String JARS = "jars";
 	private static final String JAR = "jar";
 	private static final String JAR_APPLICATIONS = "applications";
+	private static final String JAR_RUNTIMES = "runtimes";
 	private static final String JAR_LIBRARIES = "libraries";
 	
 	private static final String JAR_MAIN_CLASS_ATTRIBUTE = "main-class";
@@ -152,6 +156,23 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		
 	}
 	
+	public static class RuntimeJar extends Jar {
+
+		protected RuntimeJar(IProject project, String portablePath) throws CoreException {
+			super(project, portablePath);
+		}
+		
+		protected RuntimeJar(IProject project, String portablePath, String manifestMainClass) throws CoreException {
+			super(project, portablePath, manifestMainClass);
+		}
+		
+		@Override
+		public String toString() {
+			return "Runtime" + super.toString();
+		}
+		
+	}
+	
 	public static class LibraryJar extends Jar {
 
 		protected LibraryJar(IProject project, String portablePath) throws CoreException {
@@ -173,6 +194,7 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		Set<Jar> jars = new HashSet<Jar>();
 		jars.addAll(getApplicationJars(project));
 		jars.addAll(getLibraryJars(project));
+		jars.addAll(getRuntimeJars(project));
 		return jars;
 	}
 	
@@ -219,6 +241,51 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 			}
 		}
 		return applicationJars;
+	}
+	
+	public static Set<RuntimeJar> getRuntimeJars(IProject project) throws Exception {
+		Document properties = ProjectAnalysisProperties.getAnalysisProperties(project);
+		Set<RuntimeJar> runtimeJars = new HashSet<RuntimeJar>();
+		NodeList rootChildren = properties.getDocumentElement().getChildNodes();
+		for(int i=0; i<rootChildren.getLength(); i++){
+			if(!(rootChildren.item(i) instanceof Element)){
+				continue;
+			}
+			Element rootChild = (Element) rootChildren.item(i);
+			if(!rootChild.getTagName().equals(JARS)){
+				continue;
+			}
+			Element jarsElement = rootChild;
+			NodeList jarRuntimesElements = jarsElement.getChildNodes();
+			for(int j=0; j<jarRuntimesElements.getLength(); j++){
+				if(!(jarRuntimesElements.item(j) instanceof Element)){
+					continue;
+				}
+				Element jarRuntimesElement = (Element) jarRuntimesElements.item(j);
+				if(!jarRuntimesElement.getTagName().equals(JAR_RUNTIMES)){
+					continue;
+				}
+				NodeList jarRuntimeElements = jarRuntimesElement.getChildNodes();
+				for(int k=0; k<jarRuntimeElements.getLength(); k++){
+					if(!(jarRuntimeElements.item(k) instanceof Element)){
+						continue;
+					}
+					Element jarRuntimeElement = (Element) jarRuntimeElements.item(k);
+					if(!jarRuntimeElement.getTagName().equals(JAR)){
+						continue;
+					}
+					if(jarRuntimeElement.hasAttribute(JAR_PATH_ATTRIBUTE)){
+						String path = jarRuntimeElement.getAttribute(JAR_PATH_ATTRIBUTE);
+						if(!jarRuntimeElement.hasAttribute(JAR_MAIN_CLASS_ATTRIBUTE)){
+							runtimeJars.add(new RuntimeJar(project, path));
+						} else {
+							runtimeJars.add(new RuntimeJar(project, path, jarRuntimeElement.getAttribute(JAR_MAIN_CLASS_ATTRIBUTE)));
+						}
+					}
+				}
+			}
+		}
+		return runtimeJars;
 	}
 	
 	public static Set<LibraryJar> getLibraryJars(IProject project) throws Exception {
@@ -280,46 +347,74 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		Set<IFile> libraries = new HashSet<IFile>();
 		Map<IFile,String> jarMainClasses = new HashMap<IFile,String>();
 		
-		Node projectNode = Common.universe().project(project.getName()).eval().nodes().one();
-		if(projectNode != null){
-			// add main classes in jar manifest libraries for each library method
-			for(Node library : Common.universe().nodes(XCSG.Library).eval().nodes()){
-				// search for libraries based on source correspondence
-				try {
-					File libraryFile = null;
-					SourceCorrespondence sc = (SourceCorrespondence) library.getAttr(XCSG.sourceCorrespondence);
-					if(sc != null){
-						libraryFile = WorkspaceUtils.getFile(sc.sourceFile);
-						if(libraryFile.exists()){
-							libraries.add(sc.sourceFile);
-							JarInspector jarInspector = new JarInspector(libraryFile);
-							if(jarInspector.getManifest() != null){
-								String mainClass = jarInspector.getManifest().getMainAttributes().getValue(JAR_MANIFEST_MAIN_CLASS);
-								if(mainClass != null){
-									jarMainClasses.put(sc.sourceFile, mainClass);
-								}
-							}
-						}
-					}
-				} catch (Exception e){
-					Log.warning("Could not inspect indexed library: " + library.getAttr(XCSG.name) + "\n" + library.toString(), e);
+		// add main classes in jar manifest libraries for each library method
+		for(Node library : Common.universe().nodes(XCSG.Library).eval().nodes()){
+			// search for libraries based on source correspondence
+			try {
+				File libraryFile = null;
+				SourceCorrespondence sc = (SourceCorrespondence) library.getAttr(XCSG.sourceCorrespondence);
+				if(sc != null){
+					// ideally we can just use the node's source correspondence
+					libraryFile = WorkspaceUtils.getFile(sc.sourceFile);
+				} else {
+					// node name may be an absolute file path in some setups
+					libraryFile = new File(library.getAttr(XCSG.name).toString());
 				}
-			}
-			
-			// search for libraries contained in the project subfolder
-			for(File libraryFile : findJars(new File(project.getLocation().toOSString()))){
-				try {
-					libraries.add(WorkspaceUtils.getFile(libraryFile));
+				if(libraryFile.exists()){
+					libraries.add(sc.sourceFile);
 					JarInspector jarInspector = new JarInspector(libraryFile);
 					if(jarInspector.getManifest() != null){
 						String mainClass = jarInspector.getManifest().getMainAttributes().getValue(JAR_MANIFEST_MAIN_CLASS);
-						if(mainClass != null){
-							jarMainClasses.put(WorkspaceUtils.getFile(libraryFile), mainClass);
+						if(mainClass != null && !mainClass.isEmpty()){
+							jarMainClasses.put(sc.sourceFile, mainClass);
 						}
 					}
-				} catch (Exception e){
-					Log.warning("Could not inspect project library: " + libraryFile.getName() , e);
 				}
+			} catch (Exception e){
+				Log.warning("Could not inspect indexed library: " + library.getAttr(XCSG.name) + "\n" + library.toString(), e);
+			}
+		}
+		
+		// check the project's classpath (if it has one...)
+		try {
+			IJavaProject jProject = JavaCore.create(project);
+			IClasspathEntry[] entries = jProject.getRawClasspath();
+			for(IClasspathEntry entry : entries){
+				String entryPath = entry.getPath().toOSString();
+				if(entryPath.endsWith(".jar")){
+					File entryFile = new File(entryPath);
+					if(entryFile.exists()){
+						// absolute path
+						// TODO: how to handle absolute paths
+					} else {
+						// relative path
+						if(entryPath.startsWith("/" + project.getName())){
+							entryPath = entryPath.substring(("/" + project.getName()).length());
+						}
+						IFile libraryEntry = project.getFile(entryPath);
+						if(libraryEntry.exists()){
+							libraries.add(libraryEntry);
+						}
+					}
+				}
+			}
+		} catch (Exception e){
+			// project may not actually be a java nature...
+		}
+		
+		// default to searching for libraries contained in the project subfolder
+		for(File libraryFile : findJars(new File(project.getLocation().toOSString()))){
+			try {
+				libraries.add(WorkspaceUtils.getFile(libraryFile));
+				JarInspector jarInspector = new JarInspector(libraryFile);
+				if(jarInspector.getManifest() != null){
+					String mainClass = jarInspector.getManifest().getMainAttributes().getValue(JAR_MANIFEST_MAIN_CLASS);
+					if(mainClass != null && !mainClass.isEmpty()){
+						jarMainClasses.put(WorkspaceUtils.getFile(libraryFile), mainClass);
+					}
+				}
+			} catch (Exception e){
+				Log.warning("Could not inspect project library: " + libraryFile.getName() , e);
 			}
 		}
 		
@@ -341,12 +436,23 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 				return a.getName().compareTo(b.getName());
 			}
 		});
+		
 		Element jarLibrariesElement = properties.createElement(JAR_LIBRARIES);
 		jarsElement.appendChild(jarLibrariesElement);
+		
+		Element jarRuntimesElement = properties.createElement(JAR_RUNTIMES);
+		jarsElement.appendChild(jarRuntimesElement);
+		
+		HashSet<String> jdkLibraries = new HashSet<String>();
+		for(String jdkLibrary : SetDefinitions.JDK_LIBRARIES){
+			jdkLibraries.add(jdkLibrary);
+		}
+		
 		for(IFile library : librariesSorted){
 			Element jarLibraryElement = properties.createElement(JAR);
 			IFile projectResource = project.getFile(library.getProjectRelativePath());
-			if(projectResource != null && projectResource.exists()){
+			boolean isRelativePath = projectResource != null && projectResource.exists();
+			if(isRelativePath){
 				jarLibraryElement.setAttribute(JAR_PATH_ATTRIBUTE, library.getProjectRelativePath().toPortableString());
 			} else {
 				jarLibraryElement.setAttribute(JAR_PATH_ATTRIBUTE, library.getFullPath().toPortableString());
@@ -354,7 +460,11 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 			if(jarMainClasses.containsKey(library)){
 				jarLibraryElement.setAttribute(JAR_MAIN_CLASS_ATTRIBUTE, jarMainClasses.get(library));
 			}
-			jarLibrariesElement.appendChild(jarLibraryElement);
+			if(jdkLibraries.contains(library.getName())){
+				jarRuntimesElement.appendChild(jarLibraryElement);
+			} else {
+				jarLibrariesElement.appendChild(jarLibraryElement);
+			}
 		}
 	}
 

@@ -16,6 +16,11 @@ public final class SetDefinitions {
 
 	// hide constructor
 	private SetDefinitions() {}
+	
+	public static final String[] JDK_LIBRARIES = new String[] { "resources.jar", "rt.jar", "jsse.jar", "jce.jar", "charset.jar",
+			"jfr.jar", "cldrdata.jar", "dnsns.jar", "jaccess.jar", "jfxrt.jar", "localedata.jar", "nashorn.jar",
+			"sunec.jar", "sunjce_provider.jar", "sunpkcs11.jar", "zipfs.jar", "MRJToolkit.jar", "local_policy.jar",
+			"US_export_policy.jar", "rhino.jar", "pulse-java.jar", "management-agent.jar", "charsets.jar" };
 
 	/**
 	 * A collection of specifically just the JDK libraries
@@ -23,12 +28,7 @@ public final class SetDefinitions {
 	 */
 	public static Q JDKLibraries(){
 		AtlasSet<Node> libraries = new AtlasHashSet<Node>();
-		// TODO: expand list for OpenJDK and Windows systems (this list was compiled from a listing of JDK 8 jars on a standard Mac system)
-		String[] jdkLibraries = new String[] { "resources.jar", "rt.jar", "jsse.jar", "jce.jar", "charset.jar",
-				"jfr.jar", "cldrdata.jar", "dnsns.jar", "jaccess.jar", "jfxrt.jar", "localedata.jar", "nashorn.jar",
-				"sunec.jar", "sunjce_provider.jar", "sunpkcs11.jar", "zipfs.jar", "MRJToolkit.jar", "local_policy.jar",
-				"US_export_policy.jar" };
-		for(String jdkLibrary : jdkLibraries){
+		for(String jdkLibrary : JDK_LIBRARIES){
 			libraries.addAll(Common.universe().nodesTaggedWithAny(XCSG.Library).selectNode(XCSG.name, jdkLibrary).eval().nodes());
 		}
 		return Common.toQ(libraries);
