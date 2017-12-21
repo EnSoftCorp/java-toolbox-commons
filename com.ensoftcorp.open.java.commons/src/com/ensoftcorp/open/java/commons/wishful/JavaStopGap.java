@@ -28,6 +28,11 @@ public class JavaStopGap {
 	public static final String SIGNATURE = "##signature";
 	
 	/**
+	 * A raw text string containing the annotation values
+	 */
+	public static final String ANNOTATION_RAW_TEXT = "##annotation-raw-text";
+	
+	/**
 	 * A tag placed on class variable assignments. This is added to be
 	 * symmetrical with the instance variable assignment scheme.
 	 */
