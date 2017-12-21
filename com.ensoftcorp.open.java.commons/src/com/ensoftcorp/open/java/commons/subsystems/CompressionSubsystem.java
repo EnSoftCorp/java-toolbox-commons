@@ -26,6 +26,6 @@ public class CompressionSubsystem extends JavaSubsystem {
 
 	@Override
 	public String[] getNamespaces() {
-		return new String[] { "java.util.jar", "java.util.zip" };
+		return new String[] { "java.util.jar", "java.util.zip", "org.openzim.ZIMTypes" };
 	}
 }

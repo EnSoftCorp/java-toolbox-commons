@@ -26,7 +26,7 @@ public class MathSubsystem extends JavaSubsystem {
 
 	@Override
 	public String[] getNamespaces() {
-		return new String[] { "java.math" };
+		return new String[] { "java.math", "org.apache.commons.math3.linear", "org.apfloat" };
 	}
 	
 	@Override
