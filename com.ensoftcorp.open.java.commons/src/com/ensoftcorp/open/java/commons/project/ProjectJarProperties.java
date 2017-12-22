@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -18,6 +19,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
@@ -44,15 +46,38 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 	private static final String JAR_MAIN_CLASS_ATTRIBUTE = "main-class";
 	private static final String JAR_PATH_ATTRIBUTE = "path";
 	
-	public abstract static class Jar {
+	private static Set<String> jdkLibraries = getJDKLibraries();
+	
+	public static enum JarType {
+		APPLICATION, LIBRARY, RUNTIME
+	}
+	
+	public static class Jar {
 		protected IProject project;
 		protected String portablePath;
 		protected File file;
 		protected String manifestMainClass = null;
+		protected JarType type;
+		protected Map<String,String> attributes;
 		
-		protected Jar(IProject project, String portablePath) throws CoreException {
+		protected Jar(IProject project, JarType type, String portablePath) throws CoreException {
+			this(project, type, portablePath, new HashMap<String,String>());
+		}
+		
+		protected Jar(IProject project, JarType type, String portablePath, Map<String,String> attributes) throws CoreException {
+			this(project, type, portablePath, null, new HashMap<String,String>());
+		}
+		
+		protected Jar(IProject project, JarType type, String portablePath, String manifestMainClass) throws CoreException {
+			this(project, type, portablePath, manifestMainClass, new HashMap<String,String>());
+		}
+		
+		protected Jar(IProject project, JarType type, String portablePath, String manifestMainClass, Map<String,String> attributes) throws CoreException {
 			this.project = project;
+			this.type = type;
 			this.portablePath = portablePath;
+			this.manifestMainClass = manifestMainClass;
+			this.attributes = attributes;
 			if(portablePath.startsWith("/")){
 				// absolute path, windows needs drive letter prefix
 				if(OSUtils.isWindows()){
@@ -66,9 +91,206 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 			}
 		}
 		
-		protected Jar(IProject project, String portablePath, String manifestMainClass) throws CoreException {
-			this(project, portablePath);
-			this.manifestMainClass = manifestMainClass;
+		public IProject getProject(){
+			return project;
+		}
+		
+		public Map<String,String> getJarAttributes(){
+			return new HashMap<String,String>(attributes);
+		}
+		
+		public void setJarAttribute(String name, String value) throws Exception {
+			Map<String,String> attributes = new HashMap<String,String>();
+			attributes.put(name, value);
+			setJarAttributes(attributes);
+		}
+		
+		public void setJarAttributes(Map<String,String> attributes) throws Exception {
+			Document properties = ProjectAnalysisProperties.getAnalysisProperties(project);
+
+			NodeList rootChildren = properties.getDocumentElement().getChildNodes();
+			for(int i=0; i<rootChildren.getLength(); i++){
+				if(!(rootChildren.item(i) instanceof Element)){
+					continue;
+				}
+				Element rootChild = (Element) rootChildren.item(i);
+				if(!rootChild.getTagName().equals(JARS)){
+					continue;
+				}
+				Element jarsElement = rootChild;
+				NodeList jarEntryElements = jarsElement.getChildNodes();
+				for(int j=0; j<jarEntryElements.getLength(); j++){
+					if(!(jarEntryElements.item(j) instanceof Element)){
+						continue;
+					}
+					Element jarEntryElement = (Element) jarEntryElements.item(j);
+					if(!(jarEntryElement.getTagName().equals(JAR_APPLICATIONS) || jarEntryElement.getTagName().equals(JAR_LIBRARIES) || jarEntryElement.getTagName().equals(JAR_RUNTIMES))){
+						continue;
+					}
+					NodeList jarsElements = jarEntryElement.getChildNodes();
+					for(int k=0; k<jarsElements.getLength(); k++){
+						if(!(jarsElements.item(k) instanceof Element)){
+							continue;
+						}
+						Element jarElement = (Element) jarsElements.item(k);
+						if(!jarElement.getTagName().equals(JAR)){
+							continue;
+						}
+						if(jarElement.hasAttribute(JAR_PATH_ATTRIBUTE) && jarElement.getAttribute(JAR_PATH_ATTRIBUTE).equals(portablePath)){
+							// set the attribute values
+							for(Entry<String,String> entry : attributes.entrySet()){
+								jarElement.setAttribute(entry.getKey(), entry.getValue());
+							}
+						}
+					}
+				}
+			}
+			
+			ProjectAnalysisProperties.setAnalysisProperties(project, properties);
+			
+			for(Entry<String,String> entry : attributes.entrySet()){
+				this.attributes.put(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		public void delete() throws Exception {
+			Document properties = ProjectAnalysisProperties.getAnalysisProperties(project);
+
+			NodeList rootChildren = properties.getDocumentElement().getChildNodes();
+			for(int i=0; i<rootChildren.getLength(); i++){
+				if(!(rootChildren.item(i) instanceof Element)){
+					continue;
+				}
+				Element rootChild = (Element) rootChildren.item(i);
+				if(!rootChild.getTagName().equals(JARS)){
+					continue;
+				}
+				Element jarsElement = rootChild;
+				NodeList jarEntryElements = jarsElement.getChildNodes();
+				for(int j=0; j<jarEntryElements.getLength(); j++){
+					if(!(jarEntryElements.item(j) instanceof Element)){
+						continue;
+					}
+					Element jarEntryElement = (Element) jarEntryElements.item(j);
+					if(!(jarEntryElement.getTagName().equals(JAR_APPLICATIONS) || jarEntryElement.getTagName().equals(JAR_LIBRARIES) || jarEntryElement.getTagName().equals(JAR_RUNTIMES))){
+						continue;
+					}
+					NodeList jarsElements = jarEntryElement.getChildNodes();
+					for(int k=0; k<jarsElements.getLength(); k++){
+						if(!(jarsElements.item(k) instanceof Element)){
+							continue;
+						}
+						Element jarElement = (Element) jarsElements.item(k);
+						if(!jarElement.getTagName().equals(JAR)){
+							continue;
+						}
+						if(jarElement.hasAttribute(JAR_PATH_ATTRIBUTE) && jarElement.getAttribute(JAR_PATH_ATTRIBUTE).equals(portablePath)){
+							// remove the entry
+							jarElement.getParentNode().removeChild(jarElement);
+						}
+					}
+				}
+			}
+			
+			ProjectAnalysisProperties.setAnalysisProperties(project, properties);
+		}
+		
+		public JarType getJarType(){
+			return type;
+		}
+		
+		public void setJarType(JarType type) throws Exception {
+			if(type == getJarType()){
+				return; // nothing to do
+			} else {
+				Document properties = ProjectAnalysisProperties.getAnalysisProperties(project);
+				
+				// step 1) remove entry from properties
+				NodeList rootChildren = properties.getDocumentElement().getChildNodes();
+				for(int i=0; i<rootChildren.getLength(); i++){
+					if(!(rootChildren.item(i) instanceof Element)){
+						continue;
+					}
+					Element rootChild = (Element) rootChildren.item(i);
+					if(!rootChild.getTagName().equals(JARS)){
+						continue;
+					}
+					Element jarsElement = rootChild;
+					NodeList jarEntryElements = jarsElement.getChildNodes();
+					for(int j=0; j<jarEntryElements.getLength(); j++){
+						if(!(jarEntryElements.item(j) instanceof Element)){
+							continue;
+						}
+						Element jarEntryElement = (Element) jarEntryElements.item(j);
+						if(!(jarEntryElement.getTagName().equals(JAR_APPLICATIONS) || jarEntryElement.getTagName().equals(JAR_LIBRARIES) || jarEntryElement.getTagName().equals(JAR_RUNTIMES))){
+							continue;
+						}
+						NodeList jarsElements = jarEntryElement.getChildNodes();
+						for(int k=0; k<jarsElements.getLength(); k++){
+							if(!(jarsElements.item(k) instanceof Element)){
+								continue;
+							}
+							Element jarElement = (Element) jarsElements.item(k);
+							if(!jarElement.getTagName().equals(JAR)){
+								continue;
+							}
+							if(jarElement.hasAttribute(JAR_PATH_ATTRIBUTE) && jarElement.getAttribute(JAR_PATH_ATTRIBUTE).equals(portablePath)){
+								// remove the entry
+								jarElement.getParentNode().removeChild(jarElement);
+							}
+						}
+					}
+				}
+				
+				// step 2) added updated entry to properties
+				String newType;
+				switch (type){
+				case APPLICATION:
+					newType = JAR_APPLICATIONS;
+					break;
+				case LIBRARY:
+					newType = JAR_LIBRARIES;
+					break;
+				case RUNTIME:
+					newType = JAR_RUNTIMES;
+					break;
+					default: 
+						throw new RuntimeException("Unhandled library type.");
+				}
+				
+				for(int i=0; i<rootChildren.getLength(); i++){
+					if(!(rootChildren.item(i) instanceof Element)){
+						continue;
+					}
+					Element rootChild = (Element) rootChildren.item(i);
+					if(!rootChild.getTagName().equals(JARS)){
+						continue;
+					}
+					Element jarsElement = rootChild;
+					NodeList jarEntryElements = jarsElement.getChildNodes();
+					for(int j=0; j<jarEntryElements.getLength(); j++){
+						if(!(jarEntryElements.item(j) instanceof Element)){
+							continue;
+						}
+						Element jarEntryElement = (Element) jarEntryElements.item(j);
+						if(!jarEntryElement.getTagName().equals(newType)){
+							continue;
+						}
+						
+						Element jarLibraryElement = properties.createElement(JAR);
+						jarLibraryElement.setAttribute(JAR_PATH_ATTRIBUTE, portablePath);
+						if(manifestMainClass != null){
+							jarLibraryElement.setAttribute(JAR_MAIN_CLASS_ATTRIBUTE, manifestMainClass);
+						}
+						jarEntryElement.appendChild(jarLibraryElement);
+					}
+				}
+				
+				// step 3) overwrite the old properties with new properties
+				ProjectAnalysisProperties.setAnalysisProperties(project, properties);
+				
+				this.type = type;
+			}
 		}
 		
 		/**
@@ -131,63 +353,26 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		
 		@Override
 		public String toString() {
+			String prefix = "";
+			switch (getJarType()){
+			case APPLICATION:
+				prefix = "Application ";
+				break;
+			case LIBRARY:
+				prefix = "Library ";
+				break;
+			case RUNTIME:
+				prefix = "Runtime ";
+				break;
+				default: 
+					throw new RuntimeException("Unhandled library type.");
+			}
 			if(manifestMainClass != null){
-				return "Jar [Path=" + getPortablePath() + ", ManifestMainClass=" + manifestMainClass + "]";
+				return prefix + "Jar [Path=" + getPortablePath() + ", ManifestMainClass=" + manifestMainClass + "]";
 			} else {
-				return "Jar [Path=" + getPortablePath() + "]";
+				return prefix + "Jar [Path=" + getPortablePath() + "]";
 			}
 		}
-	}
-	
-	public static class ApplicationJar extends Jar {
-
-		protected ApplicationJar(IProject project, String portablePath) throws CoreException {
-			super(project, portablePath);
-		}
-		
-		protected ApplicationJar(IProject project, String portablePath, String manifestMainClass) throws CoreException {
-			super(project, portablePath, manifestMainClass);
-		}
-		
-		@Override
-		public String toString() {
-			return "Application" + super.toString();
-		}
-		
-	}
-	
-	public static class RuntimeJar extends Jar {
-
-		protected RuntimeJar(IProject project, String portablePath) throws CoreException {
-			super(project, portablePath);
-		}
-		
-		protected RuntimeJar(IProject project, String portablePath, String manifestMainClass) throws CoreException {
-			super(project, portablePath, manifestMainClass);
-		}
-		
-		@Override
-		public String toString() {
-			return "Runtime" + super.toString();
-		}
-		
-	}
-	
-	public static class LibraryJar extends Jar {
-
-		protected LibraryJar(IProject project, String portablePath) throws CoreException {
-			super(project, portablePath);
-		}
-		
-		protected LibraryJar(IProject project, String portablePath, String manifestMainClass) throws CoreException {
-			super(project, portablePath, manifestMainClass);
-		}
-		
-		@Override
-		public String toString() {
-			return "Library" + super.toString();
-		}
-		
 	}
 	
 	public static Set<Jar> getJars(IProject project) throws Exception {
@@ -198,9 +383,17 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		return jars;
 	}
 	
-	public static Set<ApplicationJar> getApplicationJars(IProject project) throws Exception {
+	private static Set<String> getJDKLibraries() {
+		Set<String> jdkLibraries = new HashSet<String>();
+		for(String jdkLibrary : SetDefinitions.JDK_LIBRARIES){
+			jdkLibraries.add(jdkLibrary);
+		}
+		return jdkLibraries;
+	}
+
+	public static Set<Jar> getApplicationJars(IProject project) throws Exception {
 		Document properties = ProjectAnalysisProperties.getAnalysisProperties(project);
-		Set<ApplicationJar> applicationJars = new HashSet<ApplicationJar>();
+		Set<Jar> applicationJars = new HashSet<Jar>();
 		NodeList rootChildren = properties.getDocumentElement().getChildNodes();
 		for(int i=0; i<rootChildren.getLength(); i++){
 			if(!(rootChildren.item(i) instanceof Element)){
@@ -230,11 +423,21 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 						continue;
 					}
 					if(jarApplicationElement.hasAttribute(JAR_PATH_ATTRIBUTE)){
+						// collect all the extensible attributes
+						Map<String,String> attributes = new HashMap<String,String>();
+						NamedNodeMap jarApplicationElementAttributes = jarApplicationElement.getAttributes();
+						for (int l = 0; l < jarApplicationElementAttributes.getLength(); l++) {
+							org.w3c.dom.Node attr = jarApplicationElementAttributes.item(l);
+							if(!attr.getNodeName().equals(JAR_PATH_ATTRIBUTE) && !attr.getNodeName().equals(JAR_MAIN_CLASS_ATTRIBUTE)){
+								attributes.put(attr.getNodeName(), attr.getNodeValue());
+							}
+						}
+						
 						String path = jarApplicationElement.getAttribute(JAR_PATH_ATTRIBUTE);
 						if(!jarApplicationElement.hasAttribute(JAR_MAIN_CLASS_ATTRIBUTE)){
-							applicationJars.add(new ApplicationJar(project, path));
+							applicationJars.add(new Jar(project, JarType.APPLICATION, path, attributes));
 						} else {
-							applicationJars.add(new ApplicationJar(project, path, jarApplicationElement.getAttribute(JAR_MAIN_CLASS_ATTRIBUTE)));
+							applicationJars.add(new Jar(project, JarType.APPLICATION, path, jarApplicationElement.getAttribute(JAR_MAIN_CLASS_ATTRIBUTE), attributes));
 						}
 					}
 				}
@@ -243,9 +446,9 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		return applicationJars;
 	}
 	
-	public static Set<RuntimeJar> getRuntimeJars(IProject project) throws Exception {
+	public static Set<Jar> getRuntimeJars(IProject project) throws Exception {
 		Document properties = ProjectAnalysisProperties.getAnalysisProperties(project);
-		Set<RuntimeJar> runtimeJars = new HashSet<RuntimeJar>();
+		Set<Jar> runtimeJars = new HashSet<Jar>();
 		NodeList rootChildren = properties.getDocumentElement().getChildNodes();
 		for(int i=0; i<rootChildren.getLength(); i++){
 			if(!(rootChildren.item(i) instanceof Element)){
@@ -275,11 +478,21 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 						continue;
 					}
 					if(jarRuntimeElement.hasAttribute(JAR_PATH_ATTRIBUTE)){
+						// collect all the extensible attributes
+						Map<String,String> attributes = new HashMap<String,String>();
+						NamedNodeMap jarApplicationElementAttributes = jarRuntimeElement.getAttributes();
+						for (int l = 0; l < jarApplicationElementAttributes.getLength(); l++) {
+							org.w3c.dom.Node attr = jarApplicationElementAttributes.item(l);
+							if(!attr.getNodeName().equals(JAR_PATH_ATTRIBUTE) && !attr.getNodeName().equals(JAR_MAIN_CLASS_ATTRIBUTE)){
+								attributes.put(attr.getNodeName(), attr.getNodeValue());
+							}
+						}
+						
 						String path = jarRuntimeElement.getAttribute(JAR_PATH_ATTRIBUTE);
 						if(!jarRuntimeElement.hasAttribute(JAR_MAIN_CLASS_ATTRIBUTE)){
-							runtimeJars.add(new RuntimeJar(project, path));
+							runtimeJars.add(new Jar(project, JarType.RUNTIME, path, attributes));
 						} else {
-							runtimeJars.add(new RuntimeJar(project, path, jarRuntimeElement.getAttribute(JAR_MAIN_CLASS_ATTRIBUTE)));
+							runtimeJars.add(new Jar(project, JarType.RUNTIME, path, jarRuntimeElement.getAttribute(JAR_MAIN_CLASS_ATTRIBUTE), attributes));
 						}
 					}
 				}
@@ -288,9 +501,9 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		return runtimeJars;
 	}
 	
-	public static Set<LibraryJar> getLibraryJars(IProject project) throws Exception {
+	public static Set<Jar> getLibraryJars(IProject project) throws Exception {
 		Document properties = ProjectAnalysisProperties.getAnalysisProperties(project);
-		Set<LibraryJar> libraryJars = new HashSet<LibraryJar>();
+		Set<Jar> libraryJars = new HashSet<Jar>();
 		NodeList rootChildren = properties.getDocumentElement().getChildNodes();
 		for(int i=0; i<rootChildren.getLength(); i++){
 			if(!(rootChildren.item(i) instanceof Element)){
@@ -320,11 +533,21 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 						continue;
 					}
 					if(jarLibraryElement.hasAttribute(JAR_PATH_ATTRIBUTE)){
+						// collect all the extensible attributes
+						Map<String,String> attributes = new HashMap<String,String>();
+						NamedNodeMap jarApplicationElementAttributes = jarLibraryElement.getAttributes();
+						for (int l = 0; l < jarApplicationElementAttributes.getLength(); l++) {
+							org.w3c.dom.Node attr = jarApplicationElementAttributes.item(l);
+							if(!attr.getNodeName().equals(JAR_PATH_ATTRIBUTE) && !attr.getNodeName().equals(JAR_MAIN_CLASS_ATTRIBUTE)){
+								attributes.put(attr.getNodeName(), attr.getNodeValue());
+							}
+						}
+						
 						String path = jarLibraryElement.getAttribute(JAR_PATH_ATTRIBUTE);
 						if(!jarLibraryElement.hasAttribute(JAR_MAIN_CLASS_ATTRIBUTE)){
-							libraryJars.add(new LibraryJar(project, path));
+							libraryJars.add(new Jar(project, JarType.LIBRARY, path, attributes));
 						} else {
-							libraryJars.add(new LibraryJar(project, path, jarLibraryElement.getAttribute(JAR_MAIN_CLASS_ATTRIBUTE)));
+							libraryJars.add(new Jar(project, JarType.LIBRARY, path, jarLibraryElement.getAttribute(JAR_MAIN_CLASS_ATTRIBUTE), attributes));
 						}
 					}
 				}
@@ -400,21 +623,22 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 			}
 		} catch (Exception e){
 			// project may not actually be a java nature...
+			// its ok to fail silently here
 		}
 		
 		// default to searching for libraries contained in the project subfolder
-		for(File libraryFile : findJars(new File(project.getLocation().toOSString()))){
+		for(File jarFile : findJars(new File(project.getLocation().toOSString()))){
 			try {
-				libraries.add(WorkspaceUtils.getFile(libraryFile));
-				JarInspector jarInspector = new JarInspector(libraryFile);
+				libraries.add(WorkspaceUtils.getFile(jarFile));
+				JarInspector jarInspector = new JarInspector(jarFile);
 				if(jarInspector.getManifest() != null){
 					String mainClass = jarInspector.getManifest().getMainAttributes().getValue(JAR_MANIFEST_MAIN_CLASS);
 					if(mainClass != null && !mainClass.isEmpty()){
-						jarMainClasses.put(WorkspaceUtils.getFile(libraryFile), mainClass);
+						jarMainClasses.put(WorkspaceUtils.getFile(jarFile), mainClass);
 					}
 				}
 			} catch (Exception e){
-				Log.warning("Could not inspect project library: " + libraryFile.getName() , e);
+				Log.warning("Could not inspect project library: " + jarFile.getName() , e);
 			}
 		}
 		
@@ -429,8 +653,8 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		jarsElement.appendChild(jarApplicationsElement);
 		
 		// add all libraries as support libraries
-		ArrayList<IFile> librariesSorted = new ArrayList<IFile>(libraries);
-		Collections.sort(librariesSorted, new Comparator<IFile>(){
+		ArrayList<IFile> jarsSorted = new ArrayList<IFile>(libraries);
+		Collections.sort(jarsSorted, new Comparator<IFile>(){
 			@Override
 			public int compare(IFile a, IFile b) {
 				return a.getName().compareTo(b.getName());
@@ -442,32 +666,27 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		
 		Element jarRuntimesElement = properties.createElement(JAR_RUNTIMES);
 		jarsElement.appendChild(jarRuntimesElement);
-		
-		HashSet<String> jdkLibraries = new HashSet<String>();
-		for(String jdkLibrary : SetDefinitions.JDK_LIBRARIES){
-			jdkLibraries.add(jdkLibrary);
-		}
-		
-		for(IFile library : librariesSorted){
+
+		for(IFile jar : jarsSorted){
 			Element jarLibraryElement = properties.createElement(JAR);
-			IFile projectResource = project.getFile(library.getProjectRelativePath());
+			IFile projectResource = project.getFile(jar.getProjectRelativePath());
 			boolean isRelativePath = projectResource != null && projectResource.exists();
 			if(isRelativePath){
-				jarLibraryElement.setAttribute(JAR_PATH_ATTRIBUTE, library.getProjectRelativePath().toPortableString());
+				jarLibraryElement.setAttribute(JAR_PATH_ATTRIBUTE, jar.getProjectRelativePath().toPortableString());
 			} else {
-				jarLibraryElement.setAttribute(JAR_PATH_ATTRIBUTE, library.getFullPath().toPortableString());
+				jarLibraryElement.setAttribute(JAR_PATH_ATTRIBUTE, jar.getFullPath().toPortableString());
 			}
-			if(jarMainClasses.containsKey(library)){
-				jarLibraryElement.setAttribute(JAR_MAIN_CLASS_ATTRIBUTE, jarMainClasses.get(library));
+			if(jarMainClasses.containsKey(jar)){
+				jarLibraryElement.setAttribute(JAR_MAIN_CLASS_ATTRIBUTE, jarMainClasses.get(jar));
 			}
-			if(jdkLibraries.contains(library.getName())){
+			if(jdkLibraries.contains(jar.getName())){
 				jarRuntimesElement.appendChild(jarLibraryElement);
 			} else {
 				jarLibrariesElement.appendChild(jarLibraryElement);
 			}
 		}
 	}
-
+	
 	// helper method for recursively finding jar files in a given directory
 	public static LinkedList<File> findJars(File directory){
 		LinkedList<File> jimple = new LinkedList<File>();
