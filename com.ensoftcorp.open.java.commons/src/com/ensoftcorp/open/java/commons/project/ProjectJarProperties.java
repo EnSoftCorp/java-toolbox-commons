@@ -567,6 +567,28 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 
 	@Override
 	public void initialize(IProject project, Document properties) {
+		
+		// search for an existing jars element
+		Element jarsElement = null;
+		NodeList rootChildren = properties.getDocumentElement().getChildNodes();
+		for(int i=0; i<rootChildren.getLength(); i++){
+			if(!(rootChildren.item(i) instanceof Element)){
+				continue;
+			}
+			Element rootChild = (Element) rootChildren.item(i);
+			if(!rootChild.getTagName().equals(JARS)){
+				continue;
+			}
+			jarsElement = rootChild;
+			
+			Log.warning("Project JAR Properties are being reinitialized for project " + project.getName());
+		}
+		// in jars element does not exist then create one now
+		if(jarsElement == null){
+			jarsElement = properties.createElement(JARS);
+			properties.getDocumentElement().appendChild(jarsElement);
+		}
+		
 		Set<IFile> libraries = new HashSet<IFile>();
 		Map<IFile,String> jarMainClasses = new HashMap<IFile,String>();
 		
@@ -645,8 +667,6 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		// at this time we are just initializing the application property key
 		// user or another analysis can decide which of the libraries may be
 		// part of the application
-		Element jarsElement = properties.createElement(JARS);
-		properties.getDocumentElement().appendChild(jarsElement);
 		
 		// by default consider none of the libraries as application libraries
 		Element jarApplicationsElement = properties.createElement(JAR_APPLICATIONS);
