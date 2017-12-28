@@ -569,7 +569,6 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 	public void initialize(IProject project, Document properties) {
 		
 		// search for an existing jars element
-		Element jarsElement = null;
 		NodeList rootChildren = properties.getDocumentElement().getChildNodes();
 		for(int i=0; i<rootChildren.getLength(); i++){
 			if(!(rootChildren.item(i) instanceof Element)){
@@ -579,15 +578,13 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 			if(!rootChild.getTagName().equals(JARS)){
 				continue;
 			}
-			jarsElement = rootChild;
-			
-			Log.warning("Project JAR Properties are being reinitialized for project " + project.getName());
+			Log.warning("Project JAR Properties have already been initialized for project " + project.getName() + ", skipping initialization step.");
+			return;
 		}
-		// in jars element does not exist then create one now
-		if(jarsElement == null){
-			jarsElement = properties.createElement(JARS);
-			properties.getDocumentElement().appendChild(jarsElement);
-		}
+		
+		// create root jars element
+		Element jarsElement = properties.createElement(JARS);
+		properties.getDocumentElement().appendChild(jarsElement);
 		
 		Set<IFile> libraries = new HashSet<IFile>();
 		Map<IFile,String> jarMainClasses = new HashMap<IFile,String>();
