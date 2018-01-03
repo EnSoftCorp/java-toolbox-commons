@@ -4,6 +4,7 @@ import com.ensoftcorp.atlas.core.db.graph.Edge;
 import com.ensoftcorp.atlas.core.db.graph.Graph;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.Node;
+import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
@@ -902,46 +903,87 @@ public final class CommonQueries {
 	}
 	
 	/**
-	 * Helper method to get the stringified qualified name of the class
-	 * @param method
+	 * Helper function to get the stringified qualified name of the class
+	 * @param type
 	 * @return
 	 */
-	public static String getQualifiedTypeName(Node type) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.getQualifiedTypeName(type);
+	public static String getQualifiedClassName(Node type) {
+		if(type == null){
+			throw new IllegalArgumentException("Type is null!");
+		}
+		if(!type.taggedWith(XCSG.Type)){
+			throw new IllegalArgumentException("Type parameter is not a type!");
+		}
+		return getQualifiedName(type, XCSG.Package);
 	}
 	
 	/**
-	 * Helper method to get the stringified qualified name of the method
-	 * @param method
+	 * Helper function to get the stringified qualified name of the function
+	 * @param function
 	 * @return
 	 */
-	public static String getQualifiedMethodName(Node method) {
-		if(method == null){
-			throw new IllegalArgumentException("Method is null!");
+	public static String getQualifiedMethodName(Node function) {
+		if(function == null){
+			throw new IllegalArgumentException("Function is null!");
 		}
-		if(!method.taggedWith(XCSG.Method)){
-			throw new IllegalArgumentException("Method parameter is not a method!");
+		if(!function.taggedWith(XCSG.Function)){
+			throw new IllegalArgumentException("Function parameter is not a function!");
 		}
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.getQualifiedFunctionName(method);
+		return getQualifiedName(function, XCSG.Package);
 	}
 	
 	/**
-	 * Helper method to get the stringified qualified name of the method
-	 * @param method
+	 * Helper function to get the stringified qualified name of the function
+	 * @param function
 	 * @return
 	 */
 	public static String getQualifiedName(Node node) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.getQualifiedName(node);
+		return getQualifiedName(node, XCSG.Package);
 	}
 	
 	/**
-	 * Helper method to get the stringified qualified name of the class
+	 * Helper function to get the stringified qualified name of the class
 	 * Stop after tags specify parent containers to stop qualifying at (example packages or jars)
-	 * @param method
+	 * @param node
 	 * @return
 	 */
 	public static String getQualifiedName(Node node, String...stopAfterTags) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.getQualifiedName(node, stopAfterTags);
+		if(node == null){
+			throw new IllegalArgumentException("Node is null!");
+		}
+		String result = node.attr().get(XCSG.name).toString();
+		Node parent = getDeclarativeParent(node);
+		boolean qualified = false;
+		while (parent != null && !qualified) {
+			for(String stopAfterTag : stopAfterTags){
+				if(parent.taggedWith(stopAfterTag)){
+					qualified = true;
+				}
+			}
+			String prefix = parent.attr().get(XCSG.name).toString();
+			if(!prefix.equals("")){
+				String seperator = node.taggedWith(XCSG.Classifier) && parent.taggedWith(XCSG.Classifier) ? "$" : ".";
+				result = parent.attr().get(XCSG.name) + seperator + result;
+			}
+			node = parent;
+			parent = getDeclarativeParent(parent);
+		}
+		return result;
+	}
+	
+	/**
+	 * Returns the single declarative parent
+	 * Returns null if there is no parent
+	 * Throws an IllegalArgumentException if there is more than one parent
+	 * @param function
+	 * @return
+	 */
+	private static Node getDeclarativeParent(Node node) {
+		AtlasSet<Node> parentNodes = Common.toQ(node).parent().eval().nodes();
+		if(parentNodes.size() > 1){
+			throw new IllegalArgumentException("Multiple declarative parents!");
+		}
+		return parentNodes.one();
 	}
 	
 }
