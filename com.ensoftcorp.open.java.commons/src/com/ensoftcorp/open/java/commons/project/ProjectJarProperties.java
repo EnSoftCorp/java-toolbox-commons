@@ -578,7 +578,7 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 			if(!rootChild.getTagName().equals(JARS)){
 				continue;
 			}
-			Log.warning("Project JAR Properties have already been initialized for project " + project.getName() + ", skipping initialization step.");
+//			Log.warning("Project JAR Properties have already been initialized for project " + project.getName() + ", skipping initialization step.");
 			return;
 		}
 		
