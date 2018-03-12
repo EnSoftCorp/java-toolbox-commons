@@ -8,7 +8,7 @@ Bundle-Vendor: EnSoft Corp.
 Require-Bundle: com.ensoftcorp.atlas.java.core;bundle-version="3.3.0";visibility:=reexport,
  com.ensoftcorp.atlas.java.ui;bundle-version="3.3.0";visibility:=reexport,
  com.ensoftcorp.open.commons;bundle-version="3.3.0";visibility:=reexport,
- org.eclipse.jdt.core;bundle-version="3.12.3",
+ org.eclipse.jdt.core,
  org.objectweb.asm;bundle-version="5.2.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
