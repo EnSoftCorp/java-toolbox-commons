@@ -61,6 +61,8 @@
       <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ReflectionUsage"></analyzer>
       <analyzer class="com.ensoftcorp.open.java.commons.analyzers.SerializationUsage"></analyzer>
       <analyzer class="com.ensoftcorp.open.java.commons.analyzers.SystemExitUsage"></analyzer>
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ExecutorThreadPoolUsage"></analyzer>
+     
    </extension>
    
    <!-- add analyzer properties initializer definitions -->
@@ -77,6 +79,8 @@
       <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ReflectionUsage"></analyzer>
       <analyzer class="com.ensoftcorp.open.java.commons.analyzers.SerializationUsage"></analyzer>
       <analyzer class="com.ensoftcorp.open.java.commons.analyzers.SystemExitUsage"></analyzer>
+      <analyzer class="com.ensoftcorp.open.java.commons.analyzers.ExecutorThreadPoolUsage"></analyzer>
+      
    </extension>
 
    <!-- add subsystem tagging instructions -->
