@@ -65,7 +65,7 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		}
 		
 		protected Jar(IProject project, JarType type, String portablePath, Map<String,String> attributes) throws CoreException {
-			this(project, type, portablePath, null, new HashMap<String,String>());
+			this(project, type, portablePath, null, attributes);
 		}
 		
 		protected Jar(IProject project, JarType type, String portablePath, String manifestMainClass) throws CoreException {
