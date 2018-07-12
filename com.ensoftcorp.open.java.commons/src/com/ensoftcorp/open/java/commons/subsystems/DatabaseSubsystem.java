@@ -27,7 +27,7 @@ public class DatabaseSubsystem extends JavaSubsystem {
 	@Override
 	public String[] getNamespaces() {
 		return new String[] { "java.sql", "javax.sql", "javax.sql.rowset", "javax.sql.rowset.serial",
-				"javax.sql.rowset.spi" };
+				"javax.sql.rowset.spi", "org.mapdb" };
 	}
 
 }

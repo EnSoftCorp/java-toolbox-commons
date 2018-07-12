@@ -33,7 +33,7 @@ public class UISubsystem extends JavaSubsystem {
 				"javax.swing.plaf", "javax.swing.plaf.basic", "javax.swing.plaf.metal", "javax.swing.plaf.multi",
 				"javax.swing.plaf.nimbus", "javax.swing.plaf.synth", "javax.swing.table", "javax.swing.text",
 				"javax.swing.text.html", "javax.swing.text.html.parser", "javax.swing.text.rtf", "javax.swing.tree",
-				"javax.swing.undo" };
+				"javax.swing.undo", "com.vaadin.ui" };
 	}
 
 }

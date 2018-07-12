@@ -58,9 +58,11 @@ public class LogSubsystem extends JavaSubsystem {
 			"org.apache.log4j.varia", // Contains various appenders, filters and other odds and ends.
 			"org.apache.log4j.xml", // XML based components.
 			"org.apache.log4j.xml.examples",
-			"org.slf4j"	//Slf4j logger
+			"org.slf4j" ,	//Slf4j logger
+			"jline.console"
 			};
 
 	}
+	
 
 }

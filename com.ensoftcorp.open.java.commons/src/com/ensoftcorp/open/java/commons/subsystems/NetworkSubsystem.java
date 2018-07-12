@@ -30,7 +30,12 @@ public class NetworkSubsystem extends JavaSubsystem {
 				"java.rmi.server", "javax.net", "javax.net.ssl", 
 				"io.netty.util", "io.netty.channel.nio", "io.netty.util.internal", "io.netty.channel.socket.nio", "io.netty.bootstrap",
 				"io.netty.channel", "io.netty.util.concurrent", "io.netty.channel.socket", "io.netty.buffer", "io.netty.util.internal.logging", "org.apache.commons.fileupload" 
-				};
+				, "com.vaadin.server"};
+	}
+	
+	@Override
+	public String[] getTypes() {
+		return new String[] { "com.sun.net.httpserver.HttpExchange", "fi.iki.elonen.NanoHTTPD"};
 	}
 
 }

@@ -37,7 +37,7 @@ public class SerializationSubsystem extends JavaSubsystem {
 				"javax.xml.validation", "javax.xml.ws", "javax.xml.ws.handler", "javax.xml.ws.handler.soap",
 				"javax.xml.ws.http", "javax.xml.ws.soap", "javax.xml.ws.spi", "javax.xml.ws.spi.http",
 				"javax.xml.ws.wsaddressing", "javax.xml.xpath", "org.w3c.dom", "org.w3c.dom.bootstrap",
-				"org.w3c.dom.events", "org.w3c.dom.ls", "org.xml.sax", "org.xml.sax.ext", "org.xml.sax.helpers" };
+				"org.w3c.dom.events", "org.w3c.dom.ls", "org.xml.sax", "org.xml.sax.ext", "org.xml.sax.helpers", "com.sun.org.apache.xml.internal" };
 	}
-
+	
 }
