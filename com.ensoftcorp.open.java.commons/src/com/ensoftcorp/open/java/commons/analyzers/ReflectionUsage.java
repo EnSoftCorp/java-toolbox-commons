@@ -3,8 +3,8 @@ package com.ensoftcorp.open.java.commons.analyzers;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.java.core.script.Common;
 import com.ensoftcorp.open.commons.analysis.CommonQueries;
@@ -31,17 +31,15 @@ public class ReflectionUsage extends Property {
 	public List<Result> getResults(Q context) {
 		// get all the java.lang.reflect methods
 		Q reflectionPackage = Common.universe().pkg("java.lang.reflect");
-		Q reflectionMethods = reflectionPackage.contained().nodesTaggedWithAny(XCSG.Method);
+		Q reflectionMethods = reflectionPackage.contained().nodes(XCSG.Method);
 		Q objectMethodOverrides = Common.edges(XCSG.Overrides).reverse(
-				CommonQueries.declarations(Common.typeSelect("java.lang", "Object")).nodesTaggedWithAny(XCSG.Method));
+				Common.typeSelect("java.lang", "Object").children().nodes(XCSG.Method));
 		reflectionMethods = reflectionMethods.difference(objectMethodOverrides, Common.methods("getName"), Common.methods("getSimpleName"));
 		
 		List<Result> results = new LinkedList<Result>();
-		for(Node reflectionMethod : reflectionMethods.eval().nodes()){
-			Q interaction = CommonQueries.interactions(context, Common.toQ(reflectionMethod), XCSG.Call);
-			if(!interaction.eval().edges().isEmpty()){
-				results.add(new Result("Reflection Usage", interaction));
-			}
+		List<Q> qs = CommonQueries.interactions2(Query.codemap(), context, reflectionMethods, XCSG.Call);
+		for (Q q : qs) {
+			results.add(new Result("Reflection Usage", q));
 		}
 		
 		return results;
