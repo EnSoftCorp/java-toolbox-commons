@@ -7,6 +7,7 @@ import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
+import com.ensoftcorp.open.commons.xcsg.Undocumented;
 import com.ensoftcorp.open.java.commons.log.Log;
 
 /**
@@ -25,7 +26,7 @@ public class JavaStopGap {
 	 * This attribute key corresponds to the raw function signature as a string,
 	 * which includes the return type, function name, and parameters.
 	 */
-	public static final String SIGNATURE = "##signature";
+	public static final String SIGNATURE = Undocumented.SIGNATURE;
 	
 	/**
 	 * A raw text string containing the annotation values
