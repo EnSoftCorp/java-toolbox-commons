@@ -7,7 +7,7 @@ import org.eclipse.core.commands.ExecutionException;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.ui.viewer.graph.XCSGHierarchyGraphUtil;
-import com.ensoftcorp.open.commons.utilities.DisplayUtils;
+import com.ensoftcorp.open.commons.ui.utilities.DisplayUtils;
 import com.ensoftcorp.open.java.commons.subsystems.JavaCoreSubsystem;
 
 /**

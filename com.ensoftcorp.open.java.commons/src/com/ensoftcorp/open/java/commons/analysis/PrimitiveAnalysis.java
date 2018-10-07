@@ -1,6 +1,7 @@
 package com.ensoftcorp.open.java.commons.analysis;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 
@@ -27,14 +28,14 @@ public class PrimitiveAnalysis {
 	private static final Node SHORT_OBJECT = Common.typeSelect("java.lang", "Short").eval().nodes().one();
 	
 	// primitive types
-	private static final Node BOOLEAN_PRIMITIVE =  Common.universe().nodesTaggedWithAny(XCSG.Primitive).selectNode(XCSG.name, "boolean").eval().nodes().one();
-	private static final Node CHARACTER_PRIMITIVE = Common.universe().nodesTaggedWithAny(XCSG.Primitive).selectNode(XCSG.name, "char").eval().nodes().one();
-	private static final Node BYTE_PRIMITIVE = Common.universe().nodesTaggedWithAny(XCSG.Primitive).selectNode(XCSG.name, "byte").eval().nodes().one();
-	private static final Node DOUBLE_PRIMITIVE = Common.universe().nodesTaggedWithAny(XCSG.Primitive).selectNode(XCSG.name, "double").eval().nodes().one();
-	private static final Node FLOAT_PRIMITIVE = Common.universe().nodesTaggedWithAny(XCSG.Primitive).selectNode(XCSG.name, "float").eval().nodes().one();
-	private static final Node INTEGER_PRIMITIVE = Common.universe().nodesTaggedWithAny(XCSG.Primitive).selectNode(XCSG.name, "int").eval().nodes().one();
-	private static final Node LONG_PRIMITIVE = Common.universe().nodesTaggedWithAny(XCSG.Primitive).selectNode(XCSG.name, "long").eval().nodes().one();
-	private static final Node SHORT_PRIMITIVE = Common.universe().nodesTaggedWithAny(XCSG.Primitive).selectNode(XCSG.name, "short").eval().nodes().one();
+	private static final Node BOOLEAN_PRIMITIVE =  Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "boolean").eval().nodes().one();
+	private static final Node CHARACTER_PRIMITIVE = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "char").eval().nodes().one();
+	private static final Node BYTE_PRIMITIVE = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "byte").eval().nodes().one();
+	private static final Node DOUBLE_PRIMITIVE = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "double").eval().nodes().one();
+	private static final Node FLOAT_PRIMITIVE = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "float").eval().nodes().one();
+	private static final Node INTEGER_PRIMITIVE = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "int").eval().nodes().one();
+	private static final Node LONG_PRIMITIVE = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "long").eval().nodes().one();
+	private static final Node SHORT_PRIMITIVE = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "short").eval().nodes().one();
 	
 	/**
 	 * Returns true if the given type is a primitive or primitive object type

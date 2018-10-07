@@ -7,6 +7,7 @@ import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.filters.InvalidFilterParameterException;
@@ -42,8 +43,8 @@ public class LiteralPassedParameterCallSiteFilter extends NodeFilter {
 		checkParameters(parameters);
 		input = super.filterInput(input, parameters);
 		
-		Q parameterPassedToEdges = Common.universe().edges(XCSG.ParameterPassedTo);
-		Q dataFlowEdges = Common.universe().edges(XCSG.DataFlow_Edge);
+		Q parameterPassedToEdges = Query.universe().edges(XCSG.ParameterPassedTo);
+		Q dataFlowEdges = Query.universe().edges(XCSG.DataFlow_Edge);
 		
 		AtlasSet<Node> literalOnlyCallSites = new AtlasHashSet<Node>();
 		for(Node callSite : input.eval().nodes()){

@@ -30,7 +30,7 @@ public class ReflectionUsage extends Property {
 	@Override
 	public List<Result> getResults(Q context) {
 		// get all the java.lang.reflect methods
-		Q reflectionPackage = Common.universe().pkg("java.lang.reflect");
+		Q reflectionPackage = Query.universe().pkg("java.lang.reflect");
 		Q reflectionMethods = reflectionPackage.contained().nodes(XCSG.Method);
 		Q objectMethodOverrides = Common.edges(XCSG.Overrides).reverse(
 				Common.typeSelect("java.lang", "Object").children().nodes(XCSG.Method));

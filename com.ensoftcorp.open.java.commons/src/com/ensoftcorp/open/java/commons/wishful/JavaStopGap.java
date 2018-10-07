@@ -5,7 +5,7 @@ import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
-import com.ensoftcorp.atlas.core.script.Common;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.xcsg.Undocumented;
 import com.ensoftcorp.open.java.commons.log.Log;
@@ -57,8 +57,8 @@ public class JavaStopGap {
 	 */
 	public static void addClassVariableAccessTags() {
 		Log.info("Adding class variable access tags...");
-		Q classVariables = Common.universe().nodesTaggedWithAny(XCSG.ClassVariable);
-		Q interproceduralDataFlowEdges = Common.universe().edgesTaggedWithAny(XCSG.InterproceduralDataFlow);
+		Q classVariables = Query.universe().nodes(XCSG.ClassVariable);
+		Q interproceduralDataFlowEdges = Query.universe().edges(XCSG.InterproceduralDataFlow);
 		AtlasSet<Node> classVariableAssignments = interproceduralDataFlowEdges.predecessors(classVariables).eval().nodes();
 		for (GraphElement classVariableAssignment : classVariableAssignments) {
 			classVariableAssignment.tag(CLASS_VARIABLE_ASSIGNMENT);
@@ -77,8 +77,8 @@ public class JavaStopGap {
 	 */
 	public static void removeClassVariableAccessTags() {
 		Log.info("Removing class variable access tags...");
-		Q classVariables = Common.universe().nodesTaggedWithAny(XCSG.ClassVariable);
-		Q interproceduralDataFlowEdges = Common.universe().edgesTaggedWithAny(XCSG.InterproceduralDataFlow);
+		Q classVariables = Query.universe().nodes(XCSG.ClassVariable);
+		Q interproceduralDataFlowEdges = Query.universe().edges(XCSG.InterproceduralDataFlow);
 
 		// untag class variable assignments
 		AtlasSet<Node> classVariableAssignments = interproceduralDataFlowEdges.predecessors(classVariables).eval()

@@ -24,7 +24,7 @@ import org.w3c.dom.NodeList;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.index.common.SourceCorrespondence;
-import com.ensoftcorp.atlas.core.script.Common;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.utilities.OSUtils;
 import com.ensoftcorp.open.commons.utilities.WorkspaceUtils;
@@ -590,7 +590,7 @@ public class ProjectJarProperties extends AnalysisPropertiesInitializer {
 		Map<IFile,String> jarMainClasses = new HashMap<IFile,String>();
 		
 		// add main classes in jar manifest libraries for each library method
-		for(Node library : Common.universe().nodes(XCSG.Library).eval().nodes()){
+		for(Node library : Query.universe().nodes(XCSG.Library).eval().nodes()){
 			// search for libraries based on source correspondence
 			try {
 				File libraryFile = null;

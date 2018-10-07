@@ -31,7 +31,7 @@ public class ProcessUsage extends Property {
 	@Override
 	public List<Result> getResults(Q context) {
 		Q runtimeType = Common.typeSelect("java.lang", "Runtime");
-		Q runtimeMethods = runtimeType.children().nodesTaggedWithAny(XCSG.Method);
+		Q runtimeMethods = runtimeType.children().nodes(XCSG.Method);
 		Q execMethods = runtimeMethods.intersection(Common.methods("exec"));
 		Q interactions = Query.resolve(null, CommonQueries.interactions(context, execMethods, XCSG.Call));
 		

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analysis.CommonQueries;
@@ -29,7 +30,7 @@ public class SerializationUsage extends Property {
 
 	@Override
 	public List<Result> getResults(Q context) {
-		Q supertypeEdges = Common.universe().edges(XCSG.Supertype);
+		Q supertypeEdges = Query.universe().edges(XCSG.Supertype);
 		Q serializers = supertypeEdges.reverse(Common.typeSelect("java.io", "Serializable"));
 		Q serializerConstructors = serializers.children().nodes(XCSG.Constructor);
 		

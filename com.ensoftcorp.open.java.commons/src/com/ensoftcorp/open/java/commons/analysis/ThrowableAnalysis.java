@@ -11,6 +11,7 @@ import com.ensoftcorp.atlas.core.index.common.SourceCorrespondence;
 import com.ensoftcorp.atlas.core.query.Attr.Edge;
 import com.ensoftcorp.atlas.core.query.Attr.Node;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
@@ -28,7 +29,7 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q getThrowables() {
-		Q supertypes = Common.universe().edgesTaggedWithAny(XCSG.Supertype);
+		Q supertypes = Query.universe().edges(XCSG.Supertype);
 		return supertypes.reverse(Common.typeSelect("java.lang", "Throwable"));
 	}
 
@@ -55,7 +56,7 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q getErrors() {
-		Q supertypes = Common.universe().edgesTaggedWithAny(XCSG.Supertype);
+		Q supertypes = Query.universe().edges(XCSG.Supertype);
 		return supertypes.reverse(Common.typeSelect("java.lang", "Error"));
 	}
 
@@ -66,7 +67,7 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q getCheckedExceptions() {
-		Q supertypes = Common.universe().edgesTaggedWithAny(XCSG.Supertype);
+		Q supertypes = Query.universe().edges(XCSG.Supertype);
 		Q exceptions = supertypes.reverse(Common.typeSelect("java.lang", "Exception"));
 		Q uncheckedExceptions = supertypes.reverse(Common.typeSelect("java.lang", "RuntimeException"));
 		return exceptions.difference(uncheckedExceptions);
@@ -79,7 +80,7 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q getUncheckedExceptions() {
-		Q supertypes = Common.universe().edgesTaggedWithAny(XCSG.Supertype);
+		Q supertypes = Query.universe().edges(XCSG.Supertype);
 		return supertypes.reverse(Common.typeSelect("java.lang", "RuntimeException"));
 	}
 	
@@ -99,7 +100,7 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q stack(Q origin, TraversalDirection direction){
-		return stack(Common.universe(), origin, direction);
+		return stack(Query.universe(), origin, direction);
 	}
 	
 	/**
@@ -119,7 +120,7 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q stack(Q context, Q origin, TraversalDirection direction){
-		context = context.edgesTaggedWithAny(Edge.CALL, Edge.CONTROL_FLOW, Edge.DECLARES);
+		context = context.edges(Edge.CALL, Edge.CONTROL_FLOW, Edge.DECLARES);
 		Q result;
 		if(direction == TraversalDirection.FORWARD){
 			result = context.forward(origin);
@@ -128,8 +129,8 @@ public class ThrowableAnalysis {
 		} else {
 			result = context.forward(origin).union(context.reverse(origin));
 		}
-		result = result.differenceEdges(result.edgesTaggedWithAny(Edge.PER_METHOD));
-		return result.nodesTaggedWithAny(Node.METHOD, Node.CONTROL_FLOW, Node.CONTROL_FLOW_PRESENTATION).induce(result);
+		result = result.differenceEdges(result.edges(Edge.PER_METHOD));
+		return result.nodes(Node.METHOD, Node.CONTROL_FLOW, Node.CONTROL_FLOW_PRESENTATION).induce(result);
 	}
 	
 	/**
@@ -143,21 +144,21 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q findCatchForThrows(Q input){
-		Q throwContext = Common.universe().edgesTaggedWithAny(Edge.THROW);
-		Q catchContext = Common.universe().edgesTaggedWithAny(Edge.CATCH);
-		Q cfContext = Common.universe().edgesTaggedWithAny(Edge.CONTROL_FLOW);
+		Q throwContext = Query.universe().edges(Edge.THROW);
+		Q catchContext = Query.universe().edges(Edge.CATCH);
+		Q cfContext = Query.universe().edges(Edge.CONTROL_FLOW);
 		
-		input = CommonQueries.declarations(input).nodesTaggedWithAny(Node.CONTROL_FLOW);
+		input = CommonQueries.declarations(input).nodes(Node.CONTROL_FLOW);
 		Q thrown = throwContext.forwardStep(input).retainEdges();
 		Q throwers = thrown.roots();
 		Q thrownTypes = thrown.leaves();
 		
-		Q supertypeEdges = Common.universe().edges(XCSG.Supertype);
+		Q supertypeEdges = Query.universe().edges(XCSG.Supertype);
 		Q thrownTypeHierarchy = supertypeEdges.forward(thrownTypes);
 		
 		Q caught = catchContext.reverseStep(thrownTypeHierarchy).retainEdges();
 		Q caughtTypes = caught.leaves();
-		Q catchers = caught.roots().nodesTaggedWithAny(Node.CONTROL_FLOW);
+		Q catchers = caught.roots().nodes(Node.CONTROL_FLOW);
 
 		Q reverseStack = stack(input, TraversalDirection.REVERSE);
 		
@@ -170,7 +171,7 @@ public class ThrowableAnalysis {
 		connectedCatchers = cfContext.betweenStep(filteredStack, catchers);
 		catchers = connectedCatchers.leaves();
 
-		Q catchEdges = Common.universe().edgesTaggedWithAny(Edge.CATCH);
+		Q catchEdges = Query.universe().edges(Edge.CATCH);
 		Q actualCaughtTypes = catchEdges.betweenStep(catchers, caughtTypes);
 		Q finalStack = filteredStack.between(catcherCFParents, throwers).union(connectedCatchers);
 				
@@ -193,19 +194,19 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q findThrowForCatch(Q input){
-		Q throwContext = Common.universe().edgesTaggedWithAny(Edge.THROW);
-		Q catchContext = Common.universe().edgesTaggedWithAny(Edge.CATCH);
-		Q cfContext = Common.universe().edgesTaggedWithAny(Edge.CONTROL_FLOW);
+		Q throwContext = Query.universe().edges(Edge.THROW);
+		Q catchContext = Query.universe().edges(Edge.CATCH);
+		Q cfContext = Query.universe().edges(Edge.CONTROL_FLOW);
 		
-		input = CommonQueries.declarations(input).nodesTaggedWithAny(Node.CONTROL_FLOW);
-		Q caught = catchContext.edgesTaggedWithAny(Edge.PER_CONTROL_FLOW).forwardStep(input).retainEdges();
+		input = CommonQueries.declarations(input).nodes(Node.CONTROL_FLOW);
+		Q caught = catchContext.edges(Edge.PER_CONTROL_FLOW).forwardStep(input).retainEdges();
 		Q caughtTypes = caught.leaves();
-		Q catchers = caught.roots().nodesTaggedWithAny(Node.CONTROL_FLOW);
+		Q catchers = caught.roots().nodes(Node.CONTROL_FLOW);
 		
-		Q supertypeEdges = Common.universe().edges(XCSG.Supertype);
+		Q supertypeEdges = Query.universe().edges(XCSG.Supertype);
 		Q caughtTypeHierarchy = supertypeEdges.reverse(caughtTypes);
 		
-		Q thrown = throwContext.edgesTaggedWithAny(Edge.PER_CONTROL_FLOW).reverseStep(caughtTypeHierarchy).retainEdges();
+		Q thrown = throwContext.edges(Edge.PER_CONTROL_FLOW).reverseStep(caughtTypeHierarchy).retainEdges();
 		Q throwers = thrown.roots();
 		Q thrownTypes = thrown.leaves();
 
@@ -213,7 +214,7 @@ public class ThrowableAnalysis {
 		Q catcherCFParents = catcherCFConnection.roots();
 		Q forwardStack = stack(catcherCFParents, TraversalDirection.FORWARD);
 
-		Q otherCompatibleCatchBlocks = catchContext.reverseStep(caughtTypes).difference(catchers).nodesTaggedWithAny(Node.CONTROL_FLOW);
+		Q otherCompatibleCatchBlocks = catchContext.reverseStep(caughtTypes).difference(catchers).nodes(Node.CONTROL_FLOW);
 		Q filteredStack = forwardStack.differenceEdges(forwardStack.forwardStep(otherCompatibleCatchBlocks)).forward(catcherCFParents).retainEdges();
 		filteredStack = filteredStack.between(catcherCFParents, throwers);
 		

@@ -9,7 +9,6 @@ import com.ensoftcorp.atlas.core.index.Index;
 import com.ensoftcorp.atlas.core.query.Attr;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.query.Query;
-import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.codemap.PrioritizedCodemapStage;
 import com.ensoftcorp.open.java.commons.log.Log;
@@ -57,8 +56,8 @@ public class ThreadRunnableCallSummarization extends PrioritizedCodemapStage {
 					continue;
 				}
 				
-				Q runMethods = findMethod("java.lang.Runnable", "run").reverseOn(Query.universe().edgesTaggedWithAny(XCSG.Overrides));
-				Q concreteRunMethods = runMethods.difference(Query.universe().nodesTaggedWithAny(XCSG.abstractMethod));
+				Q runMethods = findMethod("java.lang.Runnable", "run").reverseOn(Query.universe().edges(XCSG.Overrides));
+				Q concreteRunMethods = runMethods.difference(Query.universe().nodes(XCSG.abstractMethod));
 				
 				for (GraphElement target : concreteRunMethods.eval().nodes()) {
 					GraphElement edge = Graph.U.createEdge(start, target);
@@ -70,7 +69,7 @@ public class ThreadRunnableCallSummarization extends PrioritizedCodemapStage {
 	}
 	
 	private static Q findType(String binaryName) {
-		Q system = Common.universe().selectNode(Attr.Node.BINARY_NAME, binaryName);
+		Q system = Query.universe().selectNode(Attr.Node.BINARY_NAME, binaryName);
 		return system;
 	}
 	

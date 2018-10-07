@@ -9,7 +9,7 @@ import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Attr;
 import com.ensoftcorp.atlas.core.query.Q;
-import com.ensoftcorp.atlas.core.script.Common;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analysis.CallSiteAnalysis;
 import com.ensoftcorp.open.commons.analysis.G;
@@ -68,7 +68,7 @@ public class SystemExitControlFlowRefinement extends PrioritizedCodemapStage {
 	}
 	
 	private static Q findType(String binaryName) {
-		Q system = Common.universe().selectNode(Attr.Node.BINARY_NAME, binaryName);
+		Q system = Query.universe().selectNode(Attr.Node.BINARY_NAME, binaryName);
 		return system;
 	}
 	

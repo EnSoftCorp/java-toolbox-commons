@@ -1,7 +1,7 @@
 package com.ensoftcorp.open.java.commons.analysis;
 
 import com.ensoftcorp.atlas.core.query.Q;
-import com.ensoftcorp.atlas.core.script.Common;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analysis.CommonQueries;
 
@@ -18,7 +18,7 @@ public class PackageAnalysis {
 	 * @return
 	 */
 	public static Q getPackageWithSubpackages(String packageName){
-		Q allPackages = Common.universe().nodesTaggedWithAny(XCSG.Package);
+		Q allPackages = Query.universe().nodes(XCSG.Package);
 		return CommonQueries.nodesStartingWith(allPackages, packageName);
 	}
 	
@@ -28,8 +28,8 @@ public class PackageAnalysis {
 	 * @return
 	 */
 	public static Q getPackageTypes(Q packages){
-		packages = packages.nodesTaggedWithAny(XCSG.Package);
-		return CommonQueries.declarations(Common.universe(), packages).nodesTaggedWithAny(XCSG.Type);
+		packages = packages.nodes(XCSG.Package);
+		return CommonQueries.declarations(Query.universe(), packages).nodes(XCSG.Type);
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class PackageAnalysis {
 	 * @return
 	 */
 	public static Q getPackageDeclarations(String basePackageName){
-		return CommonQueries.declarations(Common.universe(), getPackageWithSubpackages(basePackageName));
+		return CommonQueries.declarations(Query.universe(), getPackageWithSubpackages(basePackageName));
 	}
 	
 

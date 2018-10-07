@@ -10,6 +10,7 @@ import org.objectweb.asm.tree.ClassNode;
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.java.commons.log.Log;
@@ -56,21 +57,21 @@ public class BytecodeUtils {
 		
 		Node typeNode = null;
 		if(jvmDescriptor.equals("I") || jvmDescriptor.equals("int")){
-			typeNode = Common.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "int").eval().nodes().one();
+			typeNode = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "int").eval().nodes().one();
 		} else if(jvmDescriptor.equals("J") || jvmDescriptor.equals("long")){
-			typeNode = Common.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "long").eval().nodes().one();
+			typeNode = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "long").eval().nodes().one();
 		} else if(jvmDescriptor.equals("S") || jvmDescriptor.equals("short")){
-			typeNode = Common.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "short").eval().nodes().one();
+			typeNode = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "short").eval().nodes().one();
 		} else if(jvmDescriptor.equals("F") || jvmDescriptor.equals("float")){
-			typeNode = Common.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "float").eval().nodes().one();
+			typeNode = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "float").eval().nodes().one();
 		} else if(jvmDescriptor.equals("D") || jvmDescriptor.equals("double")){
-			typeNode = Common.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "double").eval().nodes().one();
+			typeNode = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "double").eval().nodes().one();
 		} else if(jvmDescriptor.equals("C") || jvmDescriptor.equals("char")){
-			typeNode = Common.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "char").eval().nodes().one();
+			typeNode = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "char").eval().nodes().one();
 		} else if(jvmDescriptor.equals("B") || jvmDescriptor.equals("byte")){
-			typeNode = Common.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "byte").eval().nodes().one();
+			typeNode = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "byte").eval().nodes().one();
 		} else if(jvmDescriptor.equals("Z") || jvmDescriptor.equals("boolean")){
-			typeNode = Common.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "boolean").eval().nodes().one();
+			typeNode = Query.universe().nodes(XCSG.Primitive).selectNode(XCSG.name, "boolean").eval().nodes().one();
 		} else if(jvmDescriptor.startsWith("L")){
 			// any non-primitive Object
 			jvmDescriptor = jvmDescriptor.substring(1);
@@ -83,7 +84,7 @@ public class BytecodeUtils {
 				pkgName = qualifiedClassName.substring(0, index);
 				className = qualifiedClassName.substring(index+1, qualifiedClassName.length());
 			}
-			Q searchContext = library != null ? Common.toQ(library).contained() : Common.universe();
+			Q searchContext = library != null ? Common.toQ(library).contained() : Query.universe();
 			Q pkgs = searchContext.nodes(XCSG.Package).selectNode(XCSG.name, pkgName);
 			AtlasSet<Node> classNodes = pkgs.contained().nodes(XCSG.Classifier).selectNode(XCSG.name, className).eval().nodes();
 			if(classNodes.isEmpty()){
@@ -98,7 +99,7 @@ public class BytecodeUtils {
 		}
 		
 		if(arrayDimension > 0){
-			Q arrayElementTypeEdges = Common.universe().edges(XCSG.ArrayElementType);
+			Q arrayElementTypeEdges = Query.universe().edges(XCSG.ArrayElementType);
 			Q arrayTypes = arrayElementTypeEdges.predecessors(Common.toQ(typeNode));
 			AtlasSet<Node> arrayDimensionTypes = arrayTypes.selectNode(XCSG.Java.arrayTypeDimension, arrayDimension).eval().nodes();
 			if(arrayDimensionTypes.size() != 1){

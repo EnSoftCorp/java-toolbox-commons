@@ -13,6 +13,7 @@ import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.db.set.EmptyAtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analysis.CallSiteAnalysis.LanguageSpecificCallSiteAnalysis;
@@ -35,8 +36,8 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 	 * Given {@link XCSG#CallSite}s, return formal {@link XCSG#Identity} arguments for possible target methods.  
 	 **/
 	public static Q resolveToFormalIdentity(Q callsites) { 
-		Q actualArgument = Common.universe().edgesTaggedWithAny(XCSG.IdentityPassedTo).predecessors(callsites);
-		return Common.universe().edgesTaggedWithAny(XCSG.InterproceduralDataFlow)
+		Q actualArgument = Query.universe().edges(XCSG.IdentityPassedTo).predecessors(callsites);
+		return Query.universe().edges(XCSG.InterproceduralDataFlow)
 			.successors(actualArgument); 
 	}
 	
@@ -55,7 +56,7 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 	 * @return
 	 */
 	public static Q getSignature(Q callsites) {
-		Q signature = Common.universe().edgesTaggedWithAny(XCSG.InvokedFunction, XCSG.InvokedSignature).successors(callsites);
+		Q signature = Query.universe().edges(XCSG.InvokedFunction, XCSG.InvokedSignature).successors(callsites);
 		return signature;
 	}
 	
@@ -84,7 +85,7 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 		// The following are used if present: 
 		//     nodes <- DataFlow_Node | Variable 
 		//     edges <- DataFlow_Edge | InvokedSignature | InvokedFunction | IdentityPassedTo
-		Graph dataFlowGraph = Common.universe().eval();
+		Graph dataFlowGraph = Query.universe().eval();
 		return getTargetMethods(new NullProgressMonitor(), dataFlowGraph, callsite);
 	}
 	
@@ -99,7 +100,7 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 	 */
 	private static AtlasSet<Node> getTargetMethods(IProgressMonitor monitor, Graph dataFlowGraph, Node callsite) {
 		if (callsite.taggedWith(XCSG.StaticDispatchCallSite)) {
-			return Common.toQ(dataFlowGraph).edgesTaggedWithAny(XCSG.InvokedFunction)
+			return Common.toQ(dataFlowGraph).edges(XCSG.InvokedFunction)
 				.successors(Common.toQ(Common.toGraph(callsite))).eval().nodes();
 		} else if (callsite.taggedWith(XCSG.DynamicDispatchCallSite)) {
 			AtlasSet<Node> targetMethods = new AtlasHashSet<Node>();
@@ -134,8 +135,8 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 	 * @return
 	 */
 	private static Q getIdentity(Q dataFlowGraph, Q callsites) { 
-		Q actualArgument = dataFlowGraph.edgesTaggedWithAny(XCSG.IdentityPassedTo).predecessors(callsites);
-		return dataFlowGraph.edgesTaggedWithAny(XCSG.InterproceduralDataFlow)
+		Q actualArgument = dataFlowGraph.edges(XCSG.IdentityPassedTo).predecessors(callsites);
+		return dataFlowGraph.edges(XCSG.InterproceduralDataFlow)
 			.successors(actualArgument); 
 	}
 	
@@ -161,14 +162,14 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 		// if ClassMethod or Constructor, go back along InvokedFunction
 		// if InstanceMethod, go back along Identity <- IdentityPass -IdentityPassedTo> CallSite
 		if (method.taggedWith(XCSG.ClassMethod) || method.taggedWith(XCSG.Constructor)) {
-			return G.ins(Common.universe().eval(),method,XCSG.InvokedFunction);
+			return G.ins(Query.universe().eval(),method,XCSG.InvokedFunction);
 		} else if (method.taggedWith(XCSG.InstanceMethod)) {
-			Q formalIdentity = CommonQueries.methodThis(Common.universe(), Common.toQ(method));
+			Q formalIdentity = CommonQueries.methodThis(Query.universe(), Common.toQ(method));
 			
-			Q df = Common.universe().edgesTaggedWithAny(XCSG.DataFlow_Edge);
+			Q df = Query.universe().edges(XCSG.DataFlow_Edge);
 			Q actualIdentities = formalIdentity.predecessorsOn(df);
 			
-			Q ipt = Common.universe().edgesTaggedWithAny(XCSG.IdentityPassedTo);
+			Q ipt = Query.universe().edges(XCSG.IdentityPassedTo);
 			Q callSites = actualIdentities.successorsOn(ipt);
 			return callSites.eval().nodes();
 		} else {

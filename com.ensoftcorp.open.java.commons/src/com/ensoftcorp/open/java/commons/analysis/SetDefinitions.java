@@ -4,6 +4,7 @@ import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 
@@ -29,7 +30,7 @@ public final class SetDefinitions {
 	public static Q JDKLibraries(){
 		AtlasSet<Node> libraries = new AtlasHashSet<Node>();
 		for(String jdkLibrary : JDK_LIBRARIES){
-			libraries.addAll(Common.universe().nodesTaggedWithAny(XCSG.Library).selectNode(XCSG.name, jdkLibrary).eval().nodes());
+			libraries.addAll(Query.universe().nodes(XCSG.Library).selectNode(XCSG.name, jdkLibrary).eval().nodes());
 		}
 		return Common.toQ(libraries);
 	}

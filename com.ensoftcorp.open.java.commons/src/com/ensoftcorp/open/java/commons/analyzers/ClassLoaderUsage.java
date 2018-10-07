@@ -30,9 +30,9 @@ public class ClassLoaderUsage extends Property {
 	
 	@Override
 	public List<Result> getResults(Q context) {
-		Q supertypeEdges = Common.universe().edges(XCSG.Supertype);
+		Q supertypeEdges = Query.universe().edges(XCSG.Supertype);
 		Q loaders = supertypeEdges.reverse(Common.typeSelect("java.lang", "ClassLoader"));
-		Q overridesEdges = Common.universe().edges(XCSG.Overrides);
+		Q overridesEdges = Query.universe().edges(XCSG.Overrides);
 		Q objectMethodOverrides = overridesEdges.reverse(Common.typeSelect("java.lang", "Object").contained().nodes(XCSG.Method));
 		Q loaderMethods = loaders.children().nodes(XCSG.Method).difference(objectMethodOverrides);
 		Q interactions = Query.resolve(null, CommonQueries.interactions(context, loaderMethods, XCSG.Call));

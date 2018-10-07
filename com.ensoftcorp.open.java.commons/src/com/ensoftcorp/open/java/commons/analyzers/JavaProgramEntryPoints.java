@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analyzers.Property;
@@ -37,18 +38,18 @@ public class JavaProgramEntryPoints extends Property {
 	
 	public static Q findMainMethods() {
 		// Step 1) select nodes from the index that are marked as public, static, methods
-		Q mainMethods = Common.universe().nodesTaggedWithAll(XCSG.publicVisibility, XCSG.ClassMethod);
+		Q mainMethods = Query.universe().nodesTaggedWithAll(XCSG.publicVisibility, XCSG.ClassMethod);
 		
 		// Step 2) select nodes from the public static methods that are named "main"
 		mainMethods = mainMethods.methods("main");
 		
 		// Step 3) filter out methods that are not void return types
-		Q returnsEdges = Common.universe().edgesTaggedWithAny(XCSG.Returns).retainEdges();
+		Q returnsEdges = Query.universe().edges(XCSG.Returns).retainEdges();
 		Q voidMethods = returnsEdges.predecessors(Common.types("void"));
 		mainMethods = mainMethods.intersection(voidMethods);
 		
 		// Step 4) filter out methods that do not take exactly one parameter
-		Q paramEdges = Common.universe().edgesTaggedWithAny(XCSG.HasParameter).retainEdges();
+		Q paramEdges = Query.universe().edges(XCSG.HasParameter).retainEdges();
 		Q mainMethodParams = paramEdges.successors(mainMethods);
 		// methods with no parameters will not have a Parameter edge (and won't be reachable from parameters)
 		Q methodsWithNoParams = mainMethods.difference(paramEdges.predecessors(mainMethodParams));
@@ -60,12 +61,12 @@ public class JavaProgramEntryPoints extends Property {
 		mainMethods = mainMethods.difference(methodsWithTwoOrMoreParams);
 		
 		// Step 5) filter out methods that do not take a one dimensional String array
-		Q elementTypeEdges = Common.universe().edgesTaggedWithAny(XCSG.ArrayElementType).retainEdges();
+		Q elementTypeEdges = Query.universe().edges(XCSG.ArrayElementType).retainEdges();
 		Q stringArraysTypes = elementTypeEdges.predecessors(Common.typeSelect("java.lang", "String"));
 		// array types have a arrayTypeDimension attribute
 		Q oneDimensionStringArrayType = stringArraysTypes.selectNode(XCSG.Java.arrayTypeDimension, 1);
 		Q mainMethodFirstParams = CommonQueries.methodParameter(mainMethods, 0);
-		Q typeOfEdges = Common.universe().edgesTaggedWithAny(XCSG.TypeOf);
+		Q typeOfEdges = Query.universe().edges(XCSG.TypeOf);
 		Q oneDimensionStringArrayParameters = typeOfEdges.predecessors(oneDimensionStringArrayType);
 		Q validMainMethodFirstParams = mainMethodFirstParams.intersection(oneDimensionStringArrayParameters);
 		mainMethods = paramEdges.predecessors(validMainMethodFirstParams);
