@@ -1,0 +1,11 @@
+com.ensoftcorp.open.java.commons
+com.ensoftcorp.open.java.commons.analysis
+com.ensoftcorp.open.java.commons.analyzers
+com.ensoftcorp.open.java.commons.bytecode
+com.ensoftcorp.open.java.commons.filters
+com.ensoftcorp.open.java.commons.log
+com.ensoftcorp.open.java.commons.preferences
+com.ensoftcorp.open.java.commons.project
+com.ensoftcorp.open.java.commons.refinement
+com.ensoftcorp.open.java.commons.subsystems
+com.ensoftcorp.open.java.commons.wishful
