@@ -45,11 +45,19 @@ SOFTWARE.
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.objectweb.asm" version="5.2.0" match="greaterOrEqual"/>
       <import plugin="org.objectweb.asm.tree" version="5.2.0" match="greaterOrEqual"/>
+      <import plugin="com.ensoftcorp.open.java.commons" version="3.3.7" match="greaterOrEqual"/>
       <import feature="com.ensoftcorp.open.commons.feature" version="3.3.7.qualifier"/>
    </requires>
 
    <plugin
          id="com.ensoftcorp.open.java.commons"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.ensoftcorp.open.java.commons.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
