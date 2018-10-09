@@ -1,15 +1,15 @@
 package com.ensoftcorp.open.java.commons.analysis;
 
+import com.ensoftcorp.atlas.core.db.graph.Edge;
 import com.ensoftcorp.atlas.core.db.graph.Graph;
-import com.ensoftcorp.atlas.core.db.graph.GraphElement;
+import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.graph.operation.ForwardStepGraph;
 import com.ensoftcorp.atlas.core.db.graph.operation.InducedGraph;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.db.set.SingletonAtlasSet;
 import com.ensoftcorp.atlas.core.index.common.SourceCorrespondence;
-import com.ensoftcorp.atlas.core.query.Attr.Edge;
-import com.ensoftcorp.atlas.core.query.Attr.Node;
+import com.ensoftcorp.atlas.core.query.Attr;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
@@ -120,7 +120,7 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q stack(Q context, Q origin, TraversalDirection direction){
-		context = context.edges(Edge.CALL, Edge.CONTROL_FLOW, Edge.DECLARES);
+		context = context.edges(XCSG.Call, XCSG.ControlFlow_Edge, XCSG.Contains);
 		Q result;
 		if(direction == TraversalDirection.FORWARD){
 			result = context.forward(origin);
@@ -129,8 +129,8 @@ public class ThrowableAnalysis {
 		} else {
 			result = context.forward(origin).union(context.reverse(origin));
 		}
-		result = result.differenceEdges(result.edges(Edge.PER_METHOD));
-		return result.nodes(Node.METHOD, Node.CONTROL_FLOW, Node.CONTROL_FLOW_PRESENTATION).induce(result);
+		result = result.differenceEdges(result.edges(Attr.Edge.PER_METHOD));
+		return result.nodes(XCSG.Method, XCSG.ControlFlow_Node, Attr.Node.CONTROL_FLOW_PRESENTATION).induce(result);
 	}
 	
 	/**
@@ -144,11 +144,11 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q findCatchForThrows(Q input){
-		Q throwContext = Query.universe().edges(Edge.THROW);
-		Q catchContext = Query.universe().edges(Edge.CATCH);
-		Q cfContext = Query.universe().edges(Edge.CONTROL_FLOW);
+		Q throwContext = Query.universe().edges(Attr.Edge.THROW);
+		Q catchContext = Query.universe().edges(Attr.Edge.CATCH);
+		Q cfContext = Query.universe().edges(XCSG.ControlFlow_Edge);
 		
-		input = CommonQueries.declarations(input).nodes(Node.CONTROL_FLOW);
+		input = CommonQueries.declarations(input).nodes(XCSG.ControlFlow_Node);
 		Q thrown = throwContext.forwardStep(input).retainEdges();
 		Q throwers = thrown.roots();
 		Q thrownTypes = thrown.leaves();
@@ -158,7 +158,7 @@ public class ThrowableAnalysis {
 		
 		Q caught = catchContext.reverseStep(thrownTypeHierarchy).retainEdges();
 		Q caughtTypes = caught.leaves();
-		Q catchers = caught.roots().nodes(Node.CONTROL_FLOW);
+		Q catchers = caught.roots().nodes(XCSG.ControlFlow_Node);
 
 		Q reverseStack = stack(input, TraversalDirection.REVERSE);
 		
@@ -171,7 +171,7 @@ public class ThrowableAnalysis {
 		connectedCatchers = cfContext.betweenStep(filteredStack, catchers);
 		catchers = connectedCatchers.leaves();
 
-		Q catchEdges = Query.universe().edges(Edge.CATCH);
+		Q catchEdges = Query.universe().edges(Attr.Edge.CATCH);
 		Q actualCaughtTypes = catchEdges.betweenStep(catchers, caughtTypes);
 		Q finalStack = filteredStack.between(catcherCFParents, throwers).union(connectedCatchers);
 				
@@ -194,19 +194,19 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	public static Q findThrowForCatch(Q input){
-		Q throwContext = Query.universe().edges(Edge.THROW);
-		Q catchContext = Query.universe().edges(Edge.CATCH);
-		Q cfContext = Query.universe().edges(Edge.CONTROL_FLOW);
+		Q throwContext = Query.universe().edges(Attr.Edge.THROW);
+		Q catchContext = Query.universe().edges(Attr.Edge.CATCH);
+		Q cfContext = Query.universe().edges(XCSG.ControlFlow_Edge);
 		
-		input = CommonQueries.declarations(input).nodes(Node.CONTROL_FLOW);
-		Q caught = catchContext.edges(Edge.PER_CONTROL_FLOW).forwardStep(input).retainEdges();
+		input = CommonQueries.declarations(input).nodes(XCSG.ControlFlow_Node);
+		Q caught = catchContext.edges(Attr.Edge.PER_CONTROL_FLOW).forwardStep(input).retainEdges();
 		Q caughtTypes = caught.leaves();
-		Q catchers = caught.roots().nodes(Node.CONTROL_FLOW);
+		Q catchers = caught.roots().nodes(XCSG.ControlFlow_Node);
 		
 		Q supertypeEdges = Query.universe().edges(XCSG.Supertype);
 		Q caughtTypeHierarchy = supertypeEdges.reverse(caughtTypes);
 		
-		Q thrown = throwContext.edges(Edge.PER_CONTROL_FLOW).reverseStep(caughtTypeHierarchy).retainEdges();
+		Q thrown = throwContext.edges(Attr.Edge.PER_CONTROL_FLOW).reverseStep(caughtTypeHierarchy).retainEdges();
 		Q throwers = thrown.roots();
 		Q thrownTypes = thrown.leaves();
 
@@ -214,7 +214,7 @@ public class ThrowableAnalysis {
 		Q catcherCFParents = catcherCFConnection.roots();
 		Q forwardStack = stack(catcherCFParents, TraversalDirection.FORWARD);
 
-		Q otherCompatibleCatchBlocks = catchContext.reverseStep(caughtTypes).difference(catchers).nodes(Node.CONTROL_FLOW);
+		Q otherCompatibleCatchBlocks = catchContext.reverseStep(caughtTypes).difference(catchers).nodes(XCSG.ControlFlow_Node);
 		Q filteredStack = forwardStack.differenceEdges(forwardStack.forwardStep(otherCompatibleCatchBlocks)).forward(catcherCFParents).retainEdges();
 		filteredStack = filteredStack.between(catcherCFParents, throwers);
 		
@@ -240,20 +240,20 @@ public class ThrowableAnalysis {
 	 * @return
 	 */
 	private static Q disambiguateMultipleCompatibleCatchBlocks(Q catcherConnections){
-		AtlasSet<GraphElement> nodeSet = new AtlasHashSet<GraphElement>();
-		AtlasSet<GraphElement> edgeSet = new AtlasHashSet<GraphElement>();
+		AtlasSet<Node> nodeSet = new AtlasHashSet<Node>();
+		AtlasSet<Edge> edgeSet = new AtlasHashSet<Edge>();
 		
 		Graph catcherConnectionG = catcherConnections.eval();
 		edgeSet.addAll(catcherConnectionG.edges());
 		
-		for(GraphElement root : catcherConnections.roots().eval().nodes()){
+		for(Node root : catcherConnections.roots().eval().nodes()){
 			nodeSet.add(root);
-			Graph connectedCatchers = new ForwardStepGraph(catcherConnectionG, new SingletonAtlasSet<GraphElement>(root));
+			Graph connectedCatchers = new ForwardStepGraph(catcherConnectionG, new SingletonAtlasSet<Node>(root));
 			
-			GraphElement responder = null;
+			Node responder = null;
 			int responderOffset = Integer.MAX_VALUE;
-			for(GraphElement catcher : connectedCatchers.leaves()){
-				SourceCorrespondence correspondence = (SourceCorrespondence) catcher.attr().get(Node.SC);
+			for(Node catcher : Common.toQ(connectedCatchers.leaves()).eval().nodes()){
+				SourceCorrespondence correspondence = (SourceCorrespondence) catcher.attr().get(XCSG.sourceCorrespondence);
 				int offset = correspondence.offset;
 				if(responder == null || offset < responderOffset){
 					responder = catcher;

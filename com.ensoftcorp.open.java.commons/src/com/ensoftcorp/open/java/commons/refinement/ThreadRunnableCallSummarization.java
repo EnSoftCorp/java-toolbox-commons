@@ -2,8 +2,8 @@ package com.ensoftcorp.open.java.commons.refinement;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import com.ensoftcorp.atlas.core.db.graph.Edge;
 import com.ensoftcorp.atlas.core.db.graph.Graph;
-import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.index.Index;
 import com.ensoftcorp.atlas.core.query.Attr;
@@ -59,8 +59,8 @@ public class ThreadRunnableCallSummarization extends PrioritizedCodemapStage {
 				Q runMethods = findMethod("java.lang.Runnable", "run").reverseOn(Query.universe().edges(XCSG.Overrides));
 				Q concreteRunMethods = runMethods.difference(Query.universe().nodes(XCSG.abstractMethod));
 				
-				for (GraphElement target : concreteRunMethods.eval().nodes()) {
-					GraphElement edge = Graph.U.createEdge(start, target);
+				for (Node target : concreteRunMethods.eval().nodes()) {
+					Edge edge = Graph.U.createEdge(start, target);
 					edge.tag(XCSG.Call);
 					edge.tag(INDEX);
 				}

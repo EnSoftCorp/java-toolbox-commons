@@ -1,6 +1,5 @@
 package com.ensoftcorp.open.java.commons.wishful;
 
-import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
@@ -60,12 +59,12 @@ public class JavaStopGap {
 		Q classVariables = Query.universe().nodes(XCSG.ClassVariable);
 		Q interproceduralDataFlowEdges = Query.universe().edges(XCSG.InterproceduralDataFlow);
 		AtlasSet<Node> classVariableAssignments = interproceduralDataFlowEdges.predecessors(classVariables).eval().nodes();
-		for (GraphElement classVariableAssignment : classVariableAssignments) {
+		for (Node classVariableAssignment : classVariableAssignments) {
 			classVariableAssignment.tag(CLASS_VARIABLE_ASSIGNMENT);
 			classVariableAssignment.tag(CLASS_VARIABLE_ACCESS);
 		}
 		AtlasSet<Node> classVariableValues = interproceduralDataFlowEdges.successors(classVariables).eval().nodes();
-		for (GraphElement classVariableValue : classVariableValues) {
+		for (Node classVariableValue : classVariableValues) {
 			classVariableValue.tag(CLASS_VARIABLE_VALUE);
 			classVariableValue.tag(CLASS_VARIABLE_ACCESS);
 		}
