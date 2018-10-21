@@ -8,7 +8,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.ensoftcorp.open.java.commons.preferences.JavaCommonsPreferences;
-import com.ensoftcorp.open.java.commons.ui.Activator;
 
 /**
  * UI for Java Commons Toolbox analysis preferences
@@ -28,7 +27,7 @@ public class JavaCommonsPreferencesPage extends FieldEditorPreferencePage implem
 
 	@Override
 	public void init(IWorkbench workbench) {
-		IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
+		IPreferenceStore preferences = JavaCommonsPreferences.getPreferenceStore();
 		setPreferenceStore(preferences);
 		setDescription("Configure Java Toolbox preferences.");
 		// use to update cached values if user edits a preference

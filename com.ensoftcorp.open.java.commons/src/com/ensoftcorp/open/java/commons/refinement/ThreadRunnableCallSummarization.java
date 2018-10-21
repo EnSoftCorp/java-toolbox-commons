@@ -45,8 +45,9 @@ public class ThreadRunnableCallSummarization extends PrioritizedCodemapStage {
 	}
 
 	@Override
-	public void performIndexing(IProgressMonitor monitor) {
-		if(JavaCommonsPreferences.isThreadRunnableCallSummaryEnabled()){
+	public boolean performIndexing(IProgressMonitor monitor) {
+		boolean runIndexer = JavaCommonsPreferences.isThreadRunnableCallSummaryEnabled();
+		if(runIndexer){
 			Log.info("Summarizing flows from Thread.start to Runnable.run...");
 			// connect Thread.start() to Runnable.run()
 			for(Node start : findMethod("java.lang.Thread", "start").eval().nodes()){
@@ -66,6 +67,7 @@ public class ThreadRunnableCallSummarization extends PrioritizedCodemapStage {
 				}
 			}
 		}
+		return runIndexer;
 	}
 	
 	private static Q findType(String binaryName) {

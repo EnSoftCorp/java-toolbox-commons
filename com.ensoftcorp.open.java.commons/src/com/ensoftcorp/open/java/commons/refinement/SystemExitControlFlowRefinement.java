@@ -46,8 +46,9 @@ public class SystemExitControlFlowRefinement extends PrioritizedCodemapStage {
 	}
 
 	@Override
-	public void performIndexing(IProgressMonitor monitor) {
-		if(JavaCommonsPreferences.isSystemExitControlFlowRefinementEnabled()){
+	public boolean performIndexing(IProgressMonitor monitor) {
+		boolean runIndexer = JavaCommonsPreferences.isSystemExitControlFlowRefinementEnabled();
+		if(runIndexer){
 			Log.info("Refining control flow following System.exit...");
 			// remove outgoing control flow edges after System.exit
 			AtlasSet<Node> exits = findMethod("java.lang.System", "exit").eval().nodes();
@@ -65,6 +66,7 @@ public class SystemExitControlFlowRefinement extends PrioritizedCodemapStage {
 				Graph.U.delete(edgeToDelete);
 			}
 		}
+		return runIndexer;
 	}
 	
 	private static Q findType(String binaryName) {

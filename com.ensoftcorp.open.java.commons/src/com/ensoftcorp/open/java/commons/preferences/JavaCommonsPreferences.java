@@ -8,6 +8,14 @@ import com.ensoftcorp.open.java.commons.log.Log;
 
 public class JavaCommonsPreferences extends AbstractPreferenceInitializer {
 
+	/**
+	 * Returns the preference store used for these preferences
+	 * @return
+	 */
+	public static IPreferenceStore getPreferenceStore() {
+		return Activator.getDefault().getPreferenceStore();
+	}
+	
 	private static boolean initialized = false;
 	
 	/**
