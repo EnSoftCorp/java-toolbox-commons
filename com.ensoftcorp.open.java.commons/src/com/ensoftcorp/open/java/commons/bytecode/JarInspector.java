@@ -11,6 +11,8 @@ import java.util.jar.JarException;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import org.apache.commons.io.IOUtils;
+
 /**
  * A wrapper around the Java zip utilities to inspect Jar archives
  * 
@@ -89,8 +91,7 @@ public class JarInspector {
 		JarFile jar = new JarFile(jarFile);
 		if(jarEntry != null){
 			InputStream is = jar.getInputStream(jarEntry);
-			byte[] bytes = new byte[is.available()];
-			is.read(bytes);
+			byte[] bytes = IOUtils.toByteArray(is);
 			jar.close();
 			return bytes;
 		} else {
