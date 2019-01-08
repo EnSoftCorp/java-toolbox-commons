@@ -92,6 +92,7 @@ public class JarInspector {
 		if(jarEntry != null){
 			InputStream is = jar.getInputStream(jarEntry);
 			byte[] bytes = IOUtils.toByteArray(is);
+			is.close();
 			jar.close();
 			return bytes;
 		} else {

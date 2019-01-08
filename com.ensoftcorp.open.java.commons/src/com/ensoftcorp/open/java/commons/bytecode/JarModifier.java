@@ -22,6 +22,8 @@ import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
+import org.apache.commons.io.IOUtils;
+
 /**
  * A wrapper around the Java zip utilities to add, overwrite, or remove files
  * from archives.
@@ -66,9 +68,7 @@ public class JarModifier {
 			}
 			InputStream is = jar.getInputStream(jarEntry);
 			FileOutputStream fos = new FileOutputStream(file);
-			while (is.available() > 0) {
-				fos.write(is.read());
-			}
+			IOUtils.copy(is, fos);
 			fos.close();
 			is.close();
 		}
