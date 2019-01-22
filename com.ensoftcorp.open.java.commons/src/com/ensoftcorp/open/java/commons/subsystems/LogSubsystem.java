@@ -59,7 +59,9 @@ public class LogSubsystem extends JavaSubsystem {
 			"org.apache.log4j.xml", // XML based components.
 			"org.apache.log4j.xml.examples",
 			"org.slf4j" ,	//Slf4j logger
+			"ch.qos.logback", // Logback logger
 			"jline.console"
+			
 			};
 
 	}
