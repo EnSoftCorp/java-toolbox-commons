@@ -2,13 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Toolbox Commons
 Bundle-SymbolicName: com.ensoftcorp.open.java.commons;singleton:=true
-Bundle-Version: 3.3.7.qualifier
+Bundle-Version: 3.3.8.qualifier
 Bundle-Activator: com.ensoftcorp.open.java.commons.Activator
 Bundle-Vendor: EnSoft Corp.
 Require-Bundle: com.ensoftcorp.atlas.java.core;bundle-version="3.3.7";visibility:=reexport,
  com.ensoftcorp.atlas.java.ui;bundle-version="3.3.7";visibility:=reexport,
- com.ensoftcorp.open.commons;bundle-version="3.3.7";visibility:=reexport,
- com.ensoftcorp.open.commons.ui;bundle-version="3.3.7";visibility:=reexport,
+ com.ensoftcorp.open.commons;bundle-version="3.3.8";visibility:=reexport,
+ com.ensoftcorp.open.commons.ui;bundle-version="3.3.8";visibility:=reexport,
  org.eclipse.jdt.core,
  org.objectweb.asm;bundle-version="5.2.0";visibility:=reexport,
  org.objectweb.asm.tree;bundle-version="5.2.0"
