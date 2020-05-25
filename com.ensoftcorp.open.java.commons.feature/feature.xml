@@ -2,7 +2,7 @@
 <feature
       id="com.ensoftcorp.open.java.commons.feature"
       label="Java Toolbox Commons"
-      version="3.3.8.qualifier"
+      version="3.6.0.qualifier"
       provider-name="EnSoft Corp.">
 
    <description url="https://ensoftcorp.github.io/java-toolbox-commons">
@@ -10,13 +10,13 @@
    </description>
 
    <copyright url="https://ensoftcorp.github.io/java-toolbox-commons">
-      Copyright (c) 2016, 2019 EnSoft Corp.
+      Copyright (c) 2016, 2020 EnSoft Corp.
    </copyright>
 
    <license url="https://raw.githubusercontent.com/EnSoftCorp/java-toolbox-commons/master/LICENSE">
       MIT License (MIT)
 
-Copyright (c) 2016, 2019 EnSoft Corp.
+Copyright (c) 2016, 2020 EnSoft Corp.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the &quot;Software&quot;), to deal
@@ -40,13 +40,13 @@ SOFTWARE.
    <requires>
       <import plugin="com.ensoftcorp.atlas.java.core" version="3.3.7" match="greaterOrEqual"/>
       <import plugin="com.ensoftcorp.atlas.java.ui" version="3.3.7" match="greaterOrEqual"/>
-      <import plugin="com.ensoftcorp.open.commons" version="3.3.8" match="greaterOrEqual"/>
-      <import plugin="com.ensoftcorp.open.commons.ui" version="3.3.8" match="greaterOrEqual"/>
+      <import plugin="com.ensoftcorp.open.commons" version="3.6.0" match="greaterOrEqual"/>
+      <import plugin="com.ensoftcorp.open.commons.ui" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.objectweb.asm" version="5.2.0" match="greaterOrEqual"/>
       <import plugin="org.objectweb.asm.tree" version="5.2.0" match="greaterOrEqual"/>
-      <import plugin="com.ensoftcorp.open.java.commons" version="3.3.8" match="greaterOrEqual"/>
-      <import feature="com.ensoftcorp.open.commons.feature" version="3.3.8.qualifier"/>
+      <import plugin="com.ensoftcorp.open.java.commons" version="3.6.0" match="greaterOrEqual"/>
+      <import feature="com.ensoftcorp.open.commons.feature" version="3.6.0.qualifier"/>
    </requires>
 
    <plugin
