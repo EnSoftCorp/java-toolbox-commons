@@ -8,8 +8,4 @@ com.ensoftcorp.open.java.commons.preferences
 com.ensoftcorp.open.java.commons.project
 com.ensoftcorp.open.java.commons.refinement
 com.ensoftcorp.open.java.commons.subsystems
-com.ensoftcorp.open.java.commons.ui
-com.ensoftcorp.open.java.commons.ui.handlers
-com.ensoftcorp.open.java.commons.ui.log
-com.ensoftcorp.open.java.commons.ui.preferences
 com.ensoftcorp.open.java.commons.wishful
